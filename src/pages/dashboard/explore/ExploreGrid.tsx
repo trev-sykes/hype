@@ -8,8 +8,8 @@ import { TokenCard } from '../../../components/tokenCard/TokenCard';
 import type { Token } from '../../../types/token';
 import { ScrollToTopButton } from '../../../components/button/scrollToTop/ScrollToTopButton';
 import { timeAgoExplore } from '../../../utils/formatTimeAgo';
-import { useTokenStore } from '../../../store/allTokensStore';
-import { useTradeStore } from '../../../store/tradeStore';
+// import { useTokenStore } from '../../../store/allTokensStore';
+// import { useTradeStore } from '../../../store/tradeStore';
 interface ExploreGridProps {
     tokens: any,
     fetchNextPage: any,
@@ -19,8 +19,8 @@ interface ExploreGridProps {
     fetchAllPrices?: any
 }
 export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage, hasNextPage, loading, fetchStaticMetadata }) => {
-    const { clearTokens } = useTokenStore();
-    const { clearTrades } = useTradeStore()
+    // const { clearTokens } = useTokenStore();
+    // const { clearTrades } = useTradeStore()
     const isOnline = useOnline();
     const viewportWidth = useWidth();
     const [searchTerm, setSearchTerm] = useState('');
@@ -236,12 +236,6 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                     </div>
                 </div>
                 <button
-                    onClick={async () => {
-                        await fetchStaticMetadata("Manual Refresh");
-                    }}>
-                    REFRESH
-                </button>
-                <button
                     className={`${styles.refreshButton} ${isCooldownActive ? styles.disabled : ''}`}
                     disabled={isCooldownActive || isCooldownActive == null}
                     onClick={async () => {
@@ -269,13 +263,6 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                         />
                     </svg>
                     {isCooldownActive && isCooldownActive != null ? `${cooldownRemaining}m` : 'Refresh'}
-                </button>
-                <button
-                    onClick={() => {
-                        clearTokens()
-                        clearTrades()
-                    }}>
-                    Clear Stores
                 </button>
             </div>
             {newestTokens.length > 0 && (
