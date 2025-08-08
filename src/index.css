@@ -1,0 +1,119 @@
+:root {
+  --font-family-text: "Fira Code", monospace;
+  --font-family-number: "Montserrat", "Fira Code", monospace;
+
+  --color-accent: #144c7e;
+  --color-accent-light: #1c67a8;
+  --color-burn: #ef5350;
+  --color-mint: #26a69a;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-700: #404040;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #171717;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Default state */
+html {
+  margin: 0;
+  padding: 0;
+  transition: border 0.2s ease;
+  height: 100%;
+  background: var(--color-neutral-300);
+  overflow-y: scroll;
+
+}
+
+main {
+  position: relative;
+}
+
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
+
+/* Tint overlay shared */
+main.mint-effect::before,
+main.burn-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+  /* behind content but above background */
+  opacity: 0;
+  animation: tintFlash 600ms ease-in-out;
+}
+
+/* Specific tints */
+main.mint-effect::before {
+  background: rgba(74, 222, 128, 0.1);
+  /* green mint tint */
+}
+
+main.burn-effect::before {
+  background: rgba(239, 68, 68, 0.1);
+  /* red burn tint */
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Tint fade animation */
+@keyframes tintFlash {
+  0% {
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-accent-light);
+  border-radius: 0;
+  border: 2px solid var(--color-accent-light);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-accent);
+}

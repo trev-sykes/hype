@@ -1,0 +1,33 @@
+.persistentKeypad {
+    width: 100%;
+    background: none;
+    padding: .75rem 1rem;
+}
+
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.key {
+    font-size: 1.2rem;
+    font-family: var(--font-family-number);
+    font-weight: 800;
+    padding: .5rem 0;
+    border: none;
+    border-radius: 1rem;
+    background: none;
+    color: var(--color-neutral-900);
+    transition: background 0.15s, transform 0.1s;
+}
+
+.key:active {
+    background: var(--color-neutral-300);
+    transform: scale(0.97);
+}
+
+.key.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

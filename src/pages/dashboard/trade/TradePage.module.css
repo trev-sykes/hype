@@ -1,0 +1,278 @@
+.container {
+    min-height: 100vh;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    background-color: var(--color-neutral-100);
+    color: var(--color-neutral-900);
+    font-family: var(--font-family-text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.left {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cContainer {
+    max-width: 750px;
+    width: 100%;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.image {
+    width: 160px;
+    height: 160px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 0.25rem;
+}
+
+.stats,
+.status {
+    font-size: 0.95rem;
+    color: var(--color-neutral-600);
+    text-align: center;
+}
+
+/* Trade Container */
+.tradeCompact {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    background-color: var(--color-neutral-800);
+    border-radius: 0 0 16px 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: 0.3s ease;
+}
+
+.tradeHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tradeToggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-neutral-400);
+}
+
+/* Action Icons */
+.buySell {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem;
+    background: var(--color-neutral-100);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: 0.3s ease;
+}
+
+.buySell:hover {
+    background: var(--color-neutral-200);
+    border-color: var(--color-accent);
+    transform: scale(1.1);
+}
+
+/* Trade Input Box */
+.tradeBox {
+    display: flex;
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--color-neutral-200);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: 0.3s ease;
+    animation: slideIn 0.3s ease-out;
+}
+
+.tradeBox:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.balanceText {
+    color: var(--color-accent-light);
+}
+
+.errorText {
+    color: var(--color-burn);
+    font-weight: bold;
+}
+
+/* Input Field */
+.inputCompact {
+    flex: 1;
+    padding: 1rem 1.25rem;
+    font-size: 16px;
+    background: transparent;
+    color: var(--color-neutral-900);
+    font-weight: 500;
+    border: none;
+    outline: none;
+}
+
+.inputCompact::placeholder {
+    color: var(--color-neutral-400);
+}
+
+/* Buttons */
+.buttonCompact {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+    color: white;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    text-align: left;
+    border-radius: 0;
+    transition: 0.3s ease;
+}
+
+.buttonCompact:hover {
+    box-shadow: 0 8px 20px rgba(20, 76, 126, 0.25);
+}
+
+.buttonCompact:disabled {
+    background: var(--color-neutral-300);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Sell Button Variant */
+.sell {
+    background: linear-gradient(135deg, var(--color-burn), #c62828);
+}
+
+.sell:hover {
+    box-shadow: 0 8px 20px rgba(239, 83, 80, 0.3);
+}
+
+/* Trade Mode Tags */
+.tradeModeIndicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-neutral-400);
+}
+
+.modeLabel {
+    padding: 0.3rem 0.75rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.buyMode {
+    background: rgba(38, 166, 154, 0.1);
+    color: var(--color-mint);
+}
+
+.sellMode {
+    background: rgba(239, 83, 80, 0.1);
+    color: var(--color-burn);
+}
+
+/* Fade Loader */
+.fadeLoader {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tradeHistoryContainer {
+    width: 100%;
+}
+
+/* Input Number Spinner Removal */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .tradeCompact {
+        padding: 1rem;
+    }
+
+    .inputCompact {
+        padding: 0.875rem 1rem;
+    }
+
+    .buttonCompact {
+        padding: 0.875rem 1.25rem;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        flex-direction: column;
+        padding: .25rem;
+    }
+
+    .tradeCompact {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .buttonCompact {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Animation */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,137 @@
+.balanceCard {
+    display: block;
+    padding: 1rem;
+    border-radius: 16px;
+    background: linear-gradient(145deg, var(--color-neutral-100), var(--color-neutral-200));
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.balanceCard:hover {
+    transform: translateY(-2px);
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+.cardContent {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.tokenInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 140px;
+}
+
+.imageContainer {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--color-neutral-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.imageFallback {
+    font-size: 0.7rem;
+    color: #fff;
+    background: var(--color-accent);
+    border-radius: 6px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.tokenMeta {
+    display: flex;
+    flex-direction: column;
+}
+
+.tokenSymbol {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-neutral-900);
+}
+
+.tokenName {
+    font-size: 0.7rem;
+    color: var(--color-neutral-700);
+}
+
+.balanceBlock {
+    text-align: right;
+    min-width: 100px;
+}
+
+.balanceAmount {
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: var(--font-family-number);
+    color: var(--color-neutral-900);
+}
+
+.balanceLabel {
+    font-size: 0.65rem;
+    color: var(--color-neutral-600);
+}
+
+.valueBlock {
+    text-align: right;
+    min-width: 120px;
+}
+
+.usdValue {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-mint);
+}
+
+.ethValue,
+.ethValueSecondary {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    opacity: 0.85;
+}
+
+.priceChange {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'SF Mono', monospace;
+    min-width: 60px;
+    text-align: center;
+}
+
+.positive {
+    background-color: rgba(5, 150, 105, 0.1);
+    color: var(--color-mint);
+}
+
+.negative {
+    background-color: rgba(220, 38, 38, 0.1);
+    color: var(--color-burn);
+}
+
+.viewDetails {
+    font-size: 1.2rem;
+    color: var(--color-accent-light);
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.balanceCard:hover .viewDetails {
+    opacity: 1;
+}
