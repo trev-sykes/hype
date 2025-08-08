@@ -12,7 +12,7 @@ const REFRESH_INTERVAL_MS = 60 * 60 * 10000; // 1 hour
 async function fetchImageUrlFromUri(uri: string): Promise<string | null> {
     try {
         // Convert ipfs:// URI to HTTP URL (your existing util)
-        const url = convertToIpfsUrl(uri);
+        const url: any = convertToIpfsUrl(uri);
         const response = await fetch(url);
         if (!response.ok) {
             console.warn('Failed to fetch metadata JSON from:', url);
@@ -59,7 +59,7 @@ export function useTokensRefresh(tokenId?: string) {
 
             console.log(`[${source}] Mapping and transforming token data...`);
             const formattedTokens = await Promise.all(
-                rawMetadata.map(async (token: any, index: number) => {
+                rawMetadata.map(async (token: any) => {
                     const basePrice = toStringOrNull(token.basePrice);
                     const slope = toStringOrNull(token.slope);
                     const totalSupply = toStringOrNull(token.totalSupply);

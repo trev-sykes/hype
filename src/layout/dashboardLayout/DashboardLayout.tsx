@@ -13,7 +13,7 @@ const DashboardLayout = () => {
     const [isConnectorOpen, setIsConnectorOpen] = useState(true);
     const isOnline = useOnline();
     const account = useAccount();
-    useEnforceChain(11155111);
+    useEnforceChain(1);
     useEffect(() => {
         const alertStore = useAlertStore.getState();
 

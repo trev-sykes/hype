@@ -117,7 +117,7 @@ export function useTokenImageChecker() {
                     const tokensAfterMetadataFix = tokensAfterImageFix.map(token => {
                         if (!token.uri && !token.imageUrl) {
                             const refreshed = rawMetadata.find(
-                                m => m.tokenId.toString() === token.tokenId
+                                (m: any) => m.tokenId.toString() === token.tokenId
                             );
 
                             if (refreshed) {
