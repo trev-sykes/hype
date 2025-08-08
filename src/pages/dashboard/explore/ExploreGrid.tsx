@@ -8,8 +8,8 @@ import { TokenCard } from '../../../components/tokenCard/TokenCard';
 import type { Token } from '../../../types/token';
 import { ScrollToTopButton } from '../../../components/button/scrollToTop/ScrollToTopButton';
 import { timeAgoExplore } from '../../../utils/formatTimeAgo';
-// import { useTokenStore } from '../../../store/allTokensStore';
-// import { useTradeStore } from '../../../store/tradeStore';
+import { useTokenStore } from '../../../store/allTokensStore';
+import { useTradeStore } from '../../../store/tradeStore';
 interface ExploreGridProps {
     tokens: any,
     fetchNextPage: any,
@@ -19,8 +19,8 @@ interface ExploreGridProps {
     fetchAllPrices?: any
 }
 export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage, hasNextPage, loading, fetchStaticMetadata }) => {
-    // const { clearTokens } = useTokenStore();
-    // const { clearTrades } = useTradeStore()
+    const { clearTokens } = useTokenStore();
+    const { clearTrades } = useTradeStore()
     const isOnline = useOnline();
     const viewportWidth = useWidth();
     const [searchTerm, setSearchTerm] = useState('');
@@ -44,7 +44,7 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
     const ONE_WEEK_SECONDS = 7 * 24 * 60 * 60;
 
 
-    const COOLDOWN_TIME = 60 * 60 * 1000; // 1 hour
+    const COOLDOWN_TIME = 60 * 1000; // 1 hour
     const LAST_REFRESH_KEY = 'last_soft_refresh';
     const [highlightedTokenId, setHighlightedTokenId] = useState<string | null>(null);
 
@@ -235,6 +235,14 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
 
                     </div>
                 </div>
+                {/* <button
+                    onClick={async () => {
+                        clearTokens()
+                        clearTrades()
+                        await fetchStaticMetadata("Manual Refresh");
+                    }}>
+                    DEV REFRESH
+                </button> */}
                 <button
                     className={`${styles.refreshButton} ${isCooldownActive ? styles.disabled : ''}`}
                     disabled={isCooldownActive || isCooldownActive == null}
@@ -244,6 +252,8 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                         localStorage.setItem(LAST_REFRESH_KEY, now.toString());
                         setCooldownRemaining(Math.ceil(COOLDOWN_TIME / 1000 / 60));
                         setIsCooldownActive(true);
+                        clearTokens()
+                        clearTrades()
                         await fetchStaticMetadata("Manual Refresh");
                     }}
                 >
@@ -265,106 +275,110 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                     {isCooldownActive && isCooldownActive != null ? `${cooldownRemaining}m` : 'Refresh'}
                 </button>
             </div>
-            {newestTokens.length > 0 && (
-                <div className={styles.newTokensBar}>
-                    <h2 className={styles.newTokensTitle}>Recently Created</h2>
-                    <div className={styles.newTokensScroll}>
-                        {newestTokens.map((coin: Token) => {
-                            // coin.blockTimestamp is probably a seconds timestamp (string or number)
-                            const createdTimestamp = Number(coin.blockTimestamp); // seconds
-                            return (
-                                <div
-                                    key={coin.tokenId}
-                                    className={styles.newTokenCard}
-                                    onClick={() => {
-                                        const id = coin.tokenId.toString();
-                                        const el = tokenRefs.current.get(id);
-                                        if (el) {
-                                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                            setHighlightedTokenId(id);
-                                            setTimeout(() => setHighlightedTokenId(null), 2000);
-                                        }
-                                    }}
-                                    style={{ cursor: 'pointer' }}
-                                >
-                                    {!coin.imageUrl || coin.imageUrl === '' ? <div className={styles.imageFallback}></div> : <img
-                                        loading="lazy"
-                                        src={coin.imageUrl}
-                                        alt={coin.name || 'Coin'}
-                                        className={styles.newTokenImage}
-                                    />}
-                                    <div className={styles.newTokenInfo}>
-                                        <div className={styles.newTokenName}>{coin.name}</div>
-                                        <div className={styles.tokenAge}>{timeAgoExplore(createdTimestamp)}</div> {/* Use your helper */}
+            {
+                newestTokens.length > 0 && (
+                    <div className={styles.newTokensBar}>
+                        <h2 className={styles.newTokensTitle}>Recently Created</h2>
+                        <div className={styles.newTokensScroll}>
+                            {newestTokens.map((coin: Token) => {
+                                // coin.blockTimestamp is probably a seconds timestamp (string or number)
+                                const createdTimestamp = Number(coin.blockTimestamp); // seconds
+                                return (
+                                    <div
+                                        key={coin.tokenId}
+                                        className={styles.newTokenCard}
+                                        onClick={() => {
+                                            const id = coin.tokenId.toString();
+                                            const el = tokenRefs.current.get(id);
+                                            if (el) {
+                                                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                setHighlightedTokenId(id);
+                                                setTimeout(() => setHighlightedTokenId(null), 2000);
+                                            }
+                                        }}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        {!coin.imageUrl || coin.imageUrl === '' ? <div className={styles.imageFallback}></div> : <img
+                                            loading="lazy"
+                                            src={coin.imageUrl}
+                                            alt={coin.name || 'Coin'}
+                                            className={styles.newTokenImage}
+                                        />}
+                                        <div className={styles.newTokenInfo}>
+                                            <div className={styles.newTokenName}>{coin.name}</div>
+                                            <div className={styles.tokenAge}>{timeAgoExplore(createdTimestamp)}</div> {/* Use your helper */}
+                                        </div>
                                     </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* Grid of Coins */}
-            {isSearching ? (
-                <div className={styles.loadingMore}>
-                    <BarLoader color="#144c7e" width={200} height={6} speedMultiplier={3.5} />
-                </div>
-            ) : coinsToDisplay.length > 0 && !loading ? (
-                <>
-                    <div className={styles.gridContainer}>
-                        {sortedCoins.map((coin: Token) => (
-                            <div
-                                key={coin.tokenId.toString()}
-                                ref={(el) => {
-                                    tokenRefs.current.set(coin.tokenId.toString(), el);
-                                }}
-                                className={`${styles.tokenWrapper} ${highlightedTokenId === coin.tokenId.toString() ? styles.highlight : ''}`}
-                            >
-                                <TokenCard
-                                    key={coin.tokenId.toString()}
-                                    coin={coin}
-                                    loadState={loadStates.get(coin.tokenId.toString()) ?? null}
-                                />
-                            </div>
-                        ))}
-
+            {
+                isSearching ? (
+                    <div className={styles.loadingMore}>
+                        <BarLoader color="#144c7e" width={200} height={6} speedMultiplier={3.5} />
                     </div>
-
-                    {/* Load more button if hasNextPage */}
-                    {hasNextPage && !loading && (
-                        <button
-                            className={styles.loadMoreButton}
-                            onClick={() => fetchNextPage()}
-                            aria-label="Load more tokens"
-                        >
-                            Load More
-                        </button>
-                    )}
-
-                    {/* Loader when loading more */}
-                    {loading && (
-                        <div className={styles.loadingMore}>
-                            <BarLoader color="#144c7e" width={200} height={6} speedMultiplier={3.5} />
-                        </div>
-                    )}
-                </>
-            ) : (
-                <div className={styles.noResults}>
-                    {searchTerm ? (
-                        <>No coins found matching "{searchTerm}"</>
-                    ) : (
-                        <>
-                            <div className={styles.loading}>Loading coins</div>
-                            <div className={styles.coinsContainer}>
-                                <div className={styles.loaderContainer}>
-                                    <FadeLoader width={10} />
+                ) : coinsToDisplay.length > 0 && !loading ? (
+                    <>
+                        <div className={styles.gridContainer}>
+                            {sortedCoins.map((coin: Token) => (
+                                <div
+                                    key={coin.tokenId.toString()}
+                                    ref={(el) => {
+                                        tokenRefs.current.set(coin.tokenId.toString(), el);
+                                    }}
+                                    className={`${styles.tokenWrapper} ${highlightedTokenId === coin.tokenId.toString() ? styles.highlight : ''}`}
+                                >
+                                    <TokenCard
+                                        key={coin.tokenId.toString()}
+                                        coin={coin}
+                                        loadState={loadStates.get(coin.tokenId.toString()) ?? null}
+                                    />
                                 </div>
+                            ))}
+
+                        </div>
+
+                        {/* Load more button if hasNextPage */}
+                        {hasNextPage && !loading && (
+                            <button
+                                className={styles.loadMoreButton}
+                                onClick={() => fetchNextPage()}
+                                aria-label="Load more tokens"
+                            >
+                                Load More
+                            </button>
+                        )}
+
+                        {/* Loader when loading more */}
+                        {loading && (
+                            <div className={styles.loadingMore}>
+                                <BarLoader color="#144c7e" width={200} height={6} speedMultiplier={3.5} />
                             </div>
-                        </>
-                    )}
-                </div>
-            )}
+                        )}
+                    </>
+                ) : (
+                    <div className={styles.noResults}>
+                        {searchTerm ? (
+                            <>No coins found matching "{searchTerm}"</>
+                        ) : (
+                            <>
+                                <div className={styles.loading}>Loading coins</div>
+                                <div className={styles.coinsContainer}>
+                                    <div className={styles.loaderContainer}>
+                                        <FadeLoader width={10} />
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                )
+            }
             <ScrollToTopButton />
-        </div>
+        </div >
     );
 };
