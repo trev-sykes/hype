@@ -247,7 +247,9 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                     className={`${styles.refreshButton} ${isCooldownActive ? styles.disabled : ''}`}
                     disabled={isCooldownActive || isCooldownActive == null}
                     onClick={async () => {
+                        console.log("REFRESHING")
                         if (isCooldownActive) return;
+                        console.log("REFRESHING STARTED")
                         const now = Date.now();
                         localStorage.setItem(LAST_REFRESH_KEY, now.toString());
                         setCooldownRemaining(Math.ceil(COOLDOWN_TIME / 1000 / 60));

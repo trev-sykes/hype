@@ -36,7 +36,7 @@ export function useTokensRefresh(tokenId?: string) {
     const isFetchingRef = useRef(false);
     const [loading, setLoading] = useState(false);
 
-    const shouldFetchInitial = !isFetchingRef && hydrated && tokens.length === 0 && !tokenId;
+    const shouldFetchInitial = !isFetchingRef.current && hydrated && tokens.length === 0 && !tokenId;
 
     const fetchStaticMetadata = useCallback(async (source = "unknown") => {
         console.log(`[${source}] Starting metadata fetch...`);
