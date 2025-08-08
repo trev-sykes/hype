@@ -5,7 +5,7 @@ import Logo from '../logo/Logo';
 import { Profile } from '../profile/Profile';
 import styles from './DashboardNav.module.css';
 
-const DashboardNav = () => {
+const DashboardNav = ({ openConnector }: any) => {
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [isMobile, setIsMobile] = useState(false);
     const location = useLocation();
@@ -60,7 +60,7 @@ const DashboardNav = () => {
                     ))}
                 </div>
                 <div className={styles.profileContainer}>
-                    <Profile />
+                    <Profile openConnector={openConnector} />
                 </div>
             </div>
         </nav>

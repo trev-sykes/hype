@@ -49,7 +49,7 @@ const DashboardLayout = () => {
                 )}
                 <Outlet />
             </main>
-            <DashboardNav />
+            <DashboardNav openConnector={() => setIsConnectorOpen(true)} />
         </div>
     );
 };
