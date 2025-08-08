@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import { useScrollDirection } from '../../../hooks/useScrollDirection';
 import { useTokenStore } from '../../../store/allTokensStore';
 import { fetchETHPrice } from "../../../api/fetchETHPrice"
+import { formatEther } from 'viem';
 
 export const CoinInfo: React.FC = () => {
     const { balanceEth, totalValueEth } = useUserTokenBalance();
@@ -106,7 +107,10 @@ export const CoinInfo: React.FC = () => {
     }
     const totalSupplyUpdated = calculateTotalSupply(Number(coin.price));
     const currentPriceUSD = ethPriceUSD ? currentPriceEth * ethPriceUSD : null;
-    const marketCapUSD = ethPriceUSD ? coin.reserve * ethPriceUSD : null;
+    const marketCapUSD =
+        currentPriceUSD !== null
+            ? totalSupplyUpdated * currentPriceUSD
+            : null;
     console.log("BALACNE ETH", balanceEth)
     console.log("MCUSD", marketCapUSD)
     // Calculate USD value for users balance
@@ -198,9 +202,9 @@ export const CoinInfo: React.FC = () => {
                             <div>
                                 <label>Market Cap</label>
                                 <span>
-                                    {coin.reserve} ETH
+                                    {formatEther(coin.reserve)} ETH
                                     {marketCapUSD !== null && (
-                                        <> (~${marketCapUSD.toLocaleString(undefined, { maximumFractionDigits: 2 })})</>
+                                        <> (~${marketCapUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</>
                                     )}
                                 </span>
                             </div>
