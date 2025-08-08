@@ -49,7 +49,7 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
     const [highlightedTokenId, setHighlightedTokenId] = useState<string | null>(null);
 
     const [cooldownRemaining, setCooldownRemaining] = useState(0);
-    const [isCooldownActive, setIsCooldownActive] = useState<boolean | null>(null);
+    const [isCooldownActive, setIsCooldownActive] = useState<boolean | null>(false);
     useEffect(() => {
         const interval = setInterval(() => {
             const lastRefresh = localStorage.getItem(LAST_REFRESH_KEY);
@@ -66,6 +66,27 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
             }
         }, 1000);
 
+        return () => clearInterval(interval);
+    }, []);
+    useEffect(() => {
+        const checkCooldown = () => {
+            const lastRefresh = localStorage.getItem(LAST_REFRESH_KEY);
+            if (lastRefresh) {
+                const timePassed = Date.now() - parseInt(lastRefresh, 10);
+                const remaining = COOLDOWN_TIME - timePassed;
+                if (remaining > 0) {
+                    setCooldownRemaining(Math.ceil(remaining / 1000 / 60));
+                    setIsCooldownActive(true);
+                } else {
+                    setCooldownRemaining(0);
+                    setIsCooldownActive(false);
+                }
+            } else {
+                setIsCooldownActive(false);
+            }
+        };
+        checkCooldown();
+        const interval = setInterval(checkCooldown, 1000);
         return () => clearInterval(interval);
     }, []);
 
