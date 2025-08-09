@@ -93,7 +93,6 @@ export const CoinInfo: React.FC = () => {
         };
     }, [isImageToggled]);
 
-    console.log("cointotalSUpply", coin)
     const currentPriceEth = Number(coin.price);
 
     const BASE_PRICE = 1e12;
@@ -111,10 +110,6 @@ export const CoinInfo: React.FC = () => {
         currentPriceUSD !== null
             ? totalSupplyUpdated * currentPriceUSD
             : null;
-    console.log("BALACNE ETH", balanceEth)
-    console.log("MCUSD", marketCapUSD)
-    // Calculate USD value for users balance
-
     return (
         <div className={styles.container}>
             {isImageToggled && (

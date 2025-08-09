@@ -75,7 +75,7 @@ export function useTradeUpdater() {
             } catch (e) {
                 console.error('[TradeUpdater] Error fetching new trades', e);
             }
-        }, 30_000); // Every 30 seconds
+        }, 3_000); // Every 3 seconds
 
         return () => clearInterval(interval);
     }, []);
