@@ -39,9 +39,8 @@ export function useTokensRefresh(tokenId?: string) {
     const shouldFetchInitial = !isFetchingRef.current && hydrated && tokens.length === 0 && !tokenId;
 
     const fetchStaticMetadata = useCallback(async (source = "unknown") => {
-        console.log(`[${source}] Starting metadata fetch...`);
+        console.log(`[fetchStaticMetadata] fetching from ${source}`)
         if (isFetchingRef.current) {
-            console.log(`[${source}] Fetch already in progress, skipping.`);
             return;
         }
 
@@ -49,15 +48,10 @@ export function useTokensRefresh(tokenId?: string) {
         setLoading(true);
 
         try {
-            console.log(`[${source}] Fetching token IDs...`);
             const tokenIds = await fetchTokenIds();
-            console.log(`[${source}] Token IDs fetched:`, tokenIds);
 
-            console.log(`[${source}] Fetching metadata from blockchain...`);
             const rawMetadata = await fetchMetaDataFromBlockchain(0, tokenIds.length);
-            console.log(`[${source}] Raw metadata fetched:`, rawMetadata);
 
-            console.log(`[${source}] Mapping and transforming token data...`);
             const formattedTokens = await Promise.all(
                 rawMetadata.map(async (token: any) => {
                     const basePrice = toStringOrNull(token.basePrice);
@@ -65,7 +59,6 @@ export function useTokensRefresh(tokenId?: string) {
                     const totalSupply = toStringOrNull(token.totalSupply);
 
                     const price = calculateTokenPrice(token.basePrice?.toString(), slope, totalSupply);
-
                     let imageUrl = token.image ? convertToIpfsUrl(token.image) : null;
 
                     // If no image URL from token.image, try fetching from URI metadata JSON
@@ -93,21 +86,21 @@ export function useTokensRefresh(tokenId?: string) {
                 })
             );
 
-            console.log(`[${source}] Enriching tokens...`);
+
             const enrichedTokens: any = await enrichTokens(tokens, formattedTokens, rawMetadata, setTokens);
 
-            console.log(`[${source}] Sanitizing tokens...`);
+
             const sanitizedTokens: any = sanitizeTokensForStorage(enrichedTokens);
 
-            console.log(`[${source}] Setting tokens to store...`);
+
             setTokens(sanitizedTokens);
 
         } catch (error) {
-            console.warn(`[${source}] Issue fetching static metadata:`, error);
+
         } finally {
             isFetchingRef.current = false;
             setLoading(false);
-            console.log(`[${source}] Metadata fetch complete.`);
+
         }
     }, [setTokens, tokens]);
 

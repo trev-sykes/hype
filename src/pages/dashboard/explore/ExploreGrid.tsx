@@ -299,7 +299,7 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                 </button>
             </div>
             {
-                newestTokens.length > 0 && (
+                newestTokens.length > 0 && coinsToDisplay.length > 0 && !loading && (
                     <div className={styles.newTokensBar}>
                         <h2 className={styles.newTokensTitle}>Recently Created</h2>
                         <div className={styles.newTokensScroll}>
