@@ -1,252 +1,144 @@
-.container {
+.newTokenContainer {
+    width: 50%;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 1rem;
-    background-color: var(--color-neutral-100);
-    color: var(--color-neutral-900);
-    font-family: var(--font-family-text);
-    min-height: 100vh;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+
 }
 
-.content {
-    max-width: 900px;
-    width: 100%;
+.newTokenCard {
+    position: relative;
+    /* slightly wider for horizontal layout */
+    border-radius: 10px;
+    padding: 0.5rem;
     text-align: left;
+    display: flex;
+    flex-direction: row;
+    gap: 0.25rem;
+    text-decoration: none;
 }
 
-.hero {
-    text-align: center;
-    margin-bottom: 3rem;
+.newTokenContent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.newTokenImage {
+    width: 70px;
+    /* smaller coin image */
+    height: 70px;
+    object-fit: cover;
+    border: 2px solid var(--color-accent-light);
+}
+
+.newTokenNameSide {
+    font-size: 0.7rem;
+    color: var(--color-neutral-600);
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+}
+
+.pageContainer {
+    max-width: 1200px;
+    height: 90vh;
+    color: var(--color-neutral-900);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.header {
+    margin-bottom: 2rem;
 }
 
 .title {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    font-weight: bold;
-    color: var(--color-neutral-800);
-    line-height: 1.2;
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 0.25rem;
 }
 
-.description {
-    font-size: 1rem;
+.subtitle {
+    font-size: 1.1rem;
+    font-weight: 500;
     color: var(--color-neutral-700);
-    margin-bottom: 0;
-    line-height: 1.6;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-bottom: 1rem;
+}
+
+.aboutText {
+    line-height: 1.5;
+    font-weight: 500;
+    white-space: pre-line;
+    /* keep line breaks */
+    font-size: 1rem;
+    font-style: italic;
+
+}
+
+.stats {
+    display: flex;
+    flex-direction: column;
+    font-size: .85rem;
+    margin-bottom: 2rem;
+}
+
+.statItem {
+    color: var(--color-accent-dark);
+    font-weight: 700;
 }
 
 .section {
     margin-bottom: 3rem;
 }
 
-.subtitle {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    color: var(--color-neutral-800);
-    text-align: center;
-}
-
-.text {
-    font-size: 1rem;
-    color: var(--color-neutral-700);
-    line-height: 1.6;
-    text-align: center;
-}
-
-.features {
-    display: grid;
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.feature {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1.5rem;
-    background-color: var(--color-neutral-50, #fafafa);
-    border-radius: 8px;
-    border: 1px solid var(--color-neutral-200, #e5e5e5);
-}
-
-.featureIcon {
-    font-size: 1.5rem;
-    flex-shrink: 0;
-}
-
-.featureContent {
-    font-size: 1rem;
-    color: var(--color-neutral-700);
-    line-height: 1.5;
-}
-
-.badge {
-    display: inline-block;
-    background-color: var(--color-neutral-300);
-    color: var(--color-neutral-900);
-    font-size: 0.85rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    margin-top: 1rem;
-}
-
-.cta {
-    text-align: center;
-    margin-top: 4rem;
-}
-
-.ctaTitle {
+.sectionTitle {
     font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    color: var(--color-neutral-800);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding-bottom: 0.25rem;
 }
 
-.ctaButtons {
+.imageFallback {
+    width: 70px;
+    height: 70px;
+    background-color: var(--color-neutral-300);
+    border-radius: 8px;
+    border: 2px dashed var(--color-neutral-400);
+}
+
+.actionsSection {
+    margin-bottom: 2rem;
+}
+
+.actions {
     display: flex;
-    flex-direction: column;
     gap: 1rem;
-    align-items: center;
+    flex-wrap: wrap;
 }
 
 .ctaButton {
-    text-decoration: none;
+    display: inline-block;
+    padding: 0.7rem .75rem;
     font-weight: 700;
-    padding: 1rem 2rem;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    border: 1px solid var(--color-accent-light);
-    min-width: 200px;
     text-align: center;
+    text-decoration: none;
+    transition: background-color 0.25s ease, color 0.25s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
 }
 
-.ctaButton.primary {
-    background: var(--color-neutral-900);
+.primary {
+    background-color: var(--color-accent);
     color: var(--color-neutral-100);
+    border: 1px solid var(--color-neutral-900);
 }
 
-.ctaButton.primary:hover {
-    background: var(--color-neutral-800);
-    transform: translateY(-2px);
-}
-
-.ctaButton.secondary {
-    background: none;
-    color: var(--color-neutral-900);
-}
-
-.ctaButton.secondary:hover {
-    background: var(--color-neutral-900);
-    color: var(--color-neutral-100);
-    transform: translateY(-2px);
-}
-
-/* Tablet Styles */
-@media (min-width: 768px) {
-    .container {
-        padding: 2rem;
-    }
-
-    .title {
-        font-size: 2.5rem;
-    }
-
-    .description {
-        font-size: 1.1rem;
-    }
-
-    .features {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-    }
-
-    .ctaButtons {
-        flex-direction: row;
-        justify-content: center;
-        gap: 1.5rem;
-    }
-}
-
-/* Desktop Styles */
-@media (min-width: 1024px) {
-    .container {
-        padding: 3rem 2rem;
-    }
-
-    .content {
-        max-width: 1000px;
-    }
-
-    .hero {
-        margin-bottom: 4rem;
-    }
-
-    .title {
-        font-size: 3rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .description {
-        font-size: 1.2rem;
-    }
-
-    .subtitle {
-        font-size: 1.75rem;
-        text-align: left;
-    }
-
-    .text {
-        text-align: left;
-    }
-
-    .features {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2.5rem;
-    }
-
-    .feature {
-        padding: 2rem;
-    }
-
-    .featureIcon {
-        font-size: 2rem;
-    }
-
-    .featureContent {
-        font-size: 1.1rem;
-    }
-
-    .section {
-        margin-bottom: 4rem;
-    }
-
-    .ctaTitle {
-        font-size: 1.5rem;
-    }
-
-    .ctaButton {
-        font-size: 1.1rem;
-        padding: 1.25rem 2.5rem;
-    }
-}
-
-/* Large Desktop */
-@media (min-width: 1440px) {
-    .title {
-        font-size: 3.5rem;
-    }
-
-    .description {
-        font-size: 1.3rem;
-    }
-
-    .subtitle {
-        font-size: 2rem;
-    }
+.primary:hover {
+    background-color: var(--color-neutral-100);
+    color: var(--color-accent);
 }

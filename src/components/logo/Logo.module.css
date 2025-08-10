@@ -1,5 +1,7 @@
 .logo {
     animation: Bounce 3s forwards infinite;
+    margin: 0;
+    padding: 0;
 }
 
 @keyframes Bounce {

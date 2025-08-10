@@ -10,6 +10,7 @@ import { ScrollToTopButton } from '../../../components/button/scrollToTop/Scroll
 import { timeAgoExplore } from '../../../utils/formatTimeAgo';
 import { useTokenStore } from '../../../store/allTokensStore';
 import { useTradeStore } from '../../../store/tradeStore';
+import { COOLDOWN_TIME, LAST_REFRESH_KEY, ONE_WEEK_SECONDS } from '../../../constants';
 interface ExploreGridProps {
     tokens: any,
     fetchNextPage: any,
@@ -41,11 +42,6 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
         return () => clearInterval(interval);
     }, []);
 
-    const ONE_WEEK_SECONDS = 7 * 24 * 60 * 60;
-
-
-    const COOLDOWN_TIME = 60 * 1000; // 1 hour
-    const LAST_REFRESH_KEY = 'last_soft_refresh';
     const [highlightedTokenId, setHighlightedTokenId] = useState<string | null>(null);
 
     const [cooldownRemaining, setCooldownRemaining] = useState(0);

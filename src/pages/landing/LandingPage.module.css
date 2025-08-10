@@ -1,148 +1,30 @@
-/* LandingPage.module.css */
+/* ===== Main Container ===== */
 .container {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    background: var(--color-neutral-100);
     color: var(--color-neutral-900);
     font-family: var(--font-family-text);
-    overflow: hidden;
-}
-
-
-.content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    max-width: 450px;
-    width: 90%;
-    padding: 2rem;
-    border-radius: 16px;
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--color-neutral-300);
-    animation: fadeInUp 0.8s ease-out;
-}
-
-.logoContainer {
-    margin-bottom: 2rem;
-    animation: logoFloat 3s ease-in-out infinite;
-}
-
-.textContent {
-    margin-bottom: 2.5rem;
-}
-
-.title {
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
-    font-weight: 800;
-    color: var(--color-neutral-800);
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    animation: slideInDown 0.6s ease-out 0.2s both;
-}
-
-.tagline {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: var(--color-neutral-700);
-    margin-bottom: 0;
-    animation: slideInUp 0.6s ease-out 0.4s both;
-}
-
-.buttonContainer {
-    animation: slideInUp 0.6s ease-out 0.6s both;
-}
-
-.enterButtonLink {
-    text-decoration: none;
-    display: inline-block;
-}
-
-.enterButton {
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    background: linear-gradient(135deg, var(--color-neutral-800), var(--color-neutral-900));
-    color: var(--color-neutral-100);
-    padding: 1rem 2.5rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    align-items: center;
+    padding: 2rem 1rem;
     position: relative;
     overflow: hidden;
-    min-width: 200px;
 }
 
-.enterButton::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
+
+/* ===== Content Wrapper ===== */
+.content {
+    max-width: 1200px;
     width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 1s ease forwards;
 }
 
-.enterButton:hover::before {
-    left: 100%;
-}
-
-.enterButton:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    background: linear-gradient(135deg, var(--color-neutral-700), var(--color-neutral-800));
-}
-
-.enterButton:active {
-    transform: translateY(-1px);
-}
-
-.buttonText {
-    transition: transform 0.3s ease;
-}
-
-.buttonArrow {
-    transition: transform 0.3s ease;
-    font-size: 1.2rem;
-}
-
-.enterButton:hover .buttonArrow {
-    transform: translateX(4px);
-}
-
-/* Animations */
+/* Simple fade-in-up animation */
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideInUp {
     from {
         opacity: 0;
         transform: translateY(20px);
@@ -154,140 +36,153 @@
     }
 }
 
-@keyframes logoFloat {
-
-    0%,
-    100% {
-        transform: translateY(0px);
-    }
-
-    50% {
-        transform: translateY(-10px);
-    }
+/* ===== Logo ===== */
+.logoContainer {
+    margin-bottom: 2.5rem;
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* Tablet Styles */
+/* ===== Title ===== */
+.title {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900;
+    margin-bottom: 1.5rem;
+    color: var(--color-neutral-900);
+    line-height: 1.1;
+    text-shadow: 0 0 10px rgba(20, 76, 126, 0.3);
+}
+
+/* ===== Tagline ===== */
+.tagline {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: var(--color-neutral-800);
+    margin-bottom: 3rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== Features Grid ===== */
+.features {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 1rem;
+    margin-bottom: 3rem;
+}
+
 @media (min-width: 768px) {
-    .content {
-        max-width: 520px;
-        padding: 3rem 2.5rem;
-    }
-
-    .title {
-        font-size: 3rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .tagline {
-        font-size: 1.2rem;
-    }
-
-    .logoContainer {
-        margin-bottom: 2.5rem;
-    }
-
-    .enterButton {
-        padding: 1.2rem 3rem;
-        font-size: 1.2rem;
-        min-width: 220px;
+    .features {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        padding: 0 2rem;
     }
 }
 
-/* Desktop Styles */
 @media (min-width: 1024px) {
-    .content {
-        max-width: 600px;
-        padding: 4rem 3rem;
-    }
-
-    .title {
-        font-size: 3.5rem;
-        margin-bottom: 2rem;
-    }
-
-    .tagline {
-        font-size: 1.3rem;
-        line-height: 1.7;
-    }
-
-    .textContent {
-        margin-bottom: 3rem;
-    }
-
-    .logoContainer {
-        margin-bottom: 3rem;
-    }
-
-    .enterButton {
-        padding: 1.5rem 3.5rem;
-        font-size: 1.3rem;
-        min-width: 250px;
-    }
-
-    .backgroundPattern {
-        opacity: 0.05;
+    .features {
+        grid-template-columns: repeat(4, 1fr);
+        padding: 0;
     }
 }
 
-/* Large Desktop */
-@media (min-width: 1440px) {
-    .title {
-        font-size: 4rem;
-    }
-
-    .tagline {
-        font-size: 1.4rem;
-    }
+.aboutSection {
+    margin: 2rem 0;
+    padding: 1rem;
+    background-color: var(--light-background);
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+    max-width: 400px;
 }
 
-/* Mobile Landscape */
-@media (max-height: 600px) and (orientation: landscape) {
-    .container {
-        padding: 1rem 0;
-    }
 
-    .content {
-        padding: 1.5rem 2rem;
-        max-width: 500px;
-    }
-
-    .logoContainer {
-        margin-bottom: 1rem;
-    }
-
-    .title {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-    }
-
-    .textContent {
-        margin-bottom: 1.5rem;
-    }
-
-    .tagline {
-        font-size: 1rem;
-    }
+/* ===== Feature Box ===== */
+.feature {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
 }
 
-/* Small Mobile */
-@media (max-width: 480px) {
-    .content {
-        width: 95%;
-        padding: 1rem;
-        max-width: 380px;
-    }
+.feature:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(20, 76, 126, 0.25);
+}
 
-    .title {
-        font-size: 2.2rem;
-    }
+/* Icon */
+.icon {
+    font-size: 2.5rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    transition: transform 0.3s ease;
+}
 
-    .tagline {
-        font-size: 1rem;
-    }
+.feature:hover .icon {
+    transform: scale(1.1);
+}
 
-    .enterButton {
-        padding: 1rem 2rem;
-        font-size: 1rem;
-        min-width: 180px;
-    }
+/* Text inside features */
+.feature p {
+    color: var(--color-neutral-700);
+    font-size: 1rem;
+    text-align: center;
+    margin: 0;
+}
+
+.feature strong {
+    color: var(--color-mint);
+    font-weight: 700;
+}
+
+/* ===== Enter Button ===== */
+.enterButtonLink {
+    display: inline-block;
+    animation: fadeInUp 1s ease 0.5s forwards;
+    opacity: 0;
+    text-decoration: none !important;
+}
+
+.enterButton {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+    color: white;
+    border: none;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 1.25rem;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 8px 25px rgba(20, 76, 126, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.enterButton:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(20, 76, 126, 0.5);
+}
+
+.enterButton:active {
+    transform: translateY(-1px);
+}
+
+.buttonArrow {
+    font-size: 1.3rem;
+    user-select: none;
+    transition: transform 0.3s ease;
+}
+
+.enterButton:hover .buttonArrow {
+    transform: translateX(4px);
 }

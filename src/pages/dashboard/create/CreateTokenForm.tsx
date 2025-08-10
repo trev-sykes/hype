@@ -293,12 +293,12 @@ const CreateTokenForm = () => {
                     </label>
                     <label>
                         Starting Price
-                        <span>0.001 (automatically set for fairness)</span>
+                        <span>0.000001(automatically set for fairness)</span>
                     </label>
 
                     <label>
                         Price Growth Rate
-                        <span>0.0001 (how much price increases per purchase)</span>
+                        <span>0.0000005(how much price increases per purchase)</span>
                     </label>
 
                     <button type="submit" disabled={isSubmitting || isPending || !isOnline || isTxLoading}>
