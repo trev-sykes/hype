@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { ChevronUp, ChevronDown, Home, User, Compass, Plus } from 'lucide-react';
-import Logo from '../logo/Logo';
+import { ChevronUp, ChevronDown, Home, User, Compass, Plus, Info } from 'lucide-react';
 import { Profile } from '../profile/Profile';
 import styles from './DashboardNav.module.css';
 
@@ -25,10 +24,11 @@ const DashboardNav = ({ openConnector }: any) => {
     }, []);
 
     const navItems = [
-        { to: "/dashboard/", label: "Home", icon: Home, end: true },
-        { to: "/dashboard/account/", label: "Account", icon: User, end: true },
-        { to: "/dashboard/explore", label: "Explore", icon: Compass },
-        { to: "/dashboard/create", label: "Create", icon: Plus }
+        { to: "/", label: "Home", icon: Home, end: true },
+        { to: "/account/", label: "Account", icon: User, end: true },
+        { to: "/explore", label: "Explore", icon: Compass },
+        { to: "/create", label: "Create", icon: Plus },
+        { to: "/about", icon: Info }
     ];
 
     return (
@@ -43,9 +43,6 @@ const DashboardNav = ({ openConnector }: any) => {
                 {isCollapsed ? <ChevronUp size={isMobile ? 18 : 20} /> : <ChevronDown size={isMobile ? 18 : 20} />}
             </button>
             <div className={`${styles.navContent} ${isCollapsed ? styles.hidden : ''}`}>
-                <div className={styles.logoContainer}>
-                    <Logo background={true} size={isMobile ? '3rem' : '5rem'} />
-                </div>
                 <div className={styles.navLinks}>
                     {navItems.map((item) => (
                         <NavLink
@@ -55,9 +52,12 @@ const DashboardNav = ({ openConnector }: any) => {
                             className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
                         >
                             <item.icon size={isMobile ? 16 : 18} />
-                            <span className={styles.navLabel}>{item.label}</span>
+                            {typeof item.label === 'string' && (
+                                <span className={styles.navLabel}>{item.label}</span>
+                            )}
                         </NavLink>
                     ))}
+
                 </div>
                 <div className={styles.profileContainer}>
                     <Profile openConnector={openConnector} />

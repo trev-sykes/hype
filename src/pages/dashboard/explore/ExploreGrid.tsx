@@ -11,6 +11,7 @@ import { timeAgoExplore } from '../../../utils/formatTimeAgo';
 import { useTokenStore } from '../../../store/allTokensStore';
 import { useTradeStore } from '../../../store/tradeStore';
 import { COOLDOWN_TIME, LAST_REFRESH_KEY, ONE_WEEK_SECONDS } from '../../../constants';
+import { Link } from 'react-router-dom';
 interface ExploreGridProps {
     tokens: any,
     fetchNextPage: any,
@@ -41,7 +42,6 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
         }, 1000);
         return () => clearInterval(interval);
     }, []);
-
     const [highlightedTokenId, setHighlightedTokenId] = useState<string | null>(null);
 
     const [cooldownRemaining, setCooldownRemaining] = useState(0);
@@ -212,9 +212,9 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                         </button>
                     )}
                 </div>
-                <div className={styles.logoContainer}>
+                <Link to={'/'} className={styles.logoContainer}>
                     <Logo background={true} size={viewportWidth > 500 ? '8rem' : '6rem'} />
-                </div>
+                </Link>
             </div>
 
 

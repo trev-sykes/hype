@@ -20,7 +20,7 @@ export const PortfolioBalanceCard: React.FC<PortfolioBalanceCardProps> = ({
 
     return (
         <Link
-            to={`/dashboard/explore/${coin.tokenId}`}
+            to={`/explore/${coin.tokenId}`}
             className={styles.balanceCard}
         >
             <div className={styles.cardContent}>

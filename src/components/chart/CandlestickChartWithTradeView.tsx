@@ -304,7 +304,7 @@ export default function CandlestickChartWithTradeView({ coin, trades, interval =
             {!isLoading && (
                 <>
                     <div className={styles.controls}>
-                        <Link to={`/dashboard/explore/${coin?.tokenId}`} className={styles.assetInfo}>
+                        <Link to={`/explore/${coin?.tokenId}`} className={styles.assetInfo}>
                             <img src={coin?.imageUrl} alt={coin?.name} className={styles.image} />
                             <span className={styles.symbol}>{coin?.symbol}</span>
                         </Link>

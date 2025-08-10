@@ -152,7 +152,7 @@ export const TokenCard: React.FC<TokenCardProps> = ({ coin, loadState }) => {
 
     return (
         <Link
-            to={`/dashboard/explore/${coin.tokenId}`}
+            to={`/explore/${coin.tokenId}`}
             className={clsx(
                 styles.coinCard,
                 priceDirection === 'up' && styles.priceChangeUp,

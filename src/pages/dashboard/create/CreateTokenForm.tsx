@@ -312,7 +312,7 @@ const CreateTokenForm = () => {
                     <p className={styles.successMessage}>Congratulations! Your coin has been created and is ready for people to discover and buy.</p>
 
                     <div className={styles.successActions}>
-                        <Link to={'/dashboard/explore'} className={styles.secondaryButton}>
+                        <Link to={'/explore'} className={styles.secondaryButton}>
                             See All Coins
                         </Link>
                     </div>

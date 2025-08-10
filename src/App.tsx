@@ -4,7 +4,7 @@ import { config } from './wagmi'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import LandingPage from './pages/landing/LandingPage'
+import About from './pages/dashboard/about/About'
 import DashboardLayout from './layout/dashboardLayout/DashboardLayout'
 import { DashboardHome } from './pages/dashboard/dashboardHome/DashboardHome'
 import CreateTokenForm from './pages/dashboard/create/CreateTokenForm'
@@ -60,11 +60,11 @@ function InnerApp() {
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route path="/dashboard/" element={<DashboardHome tokens={tokens} />} />
+        {/* <Route path="/" element={<LandingPage />} /> */}
+        <Route element={<DashboardLayout />}>
+          <Route path="/" element={<DashboardHome tokens={tokens} />} />
           <Route
-            path="/dashboard/account"
+            path="/account"
             element={
               <Portfolio
                 tokens={tokens}
@@ -72,7 +72,7 @@ function InnerApp() {
             }
           />
           <Route
-            path="/dashboard/explore"
+            path="/explore"
             element={
               <ExploreGrid
                 tokens={tokens}
@@ -84,13 +84,14 @@ function InnerApp() {
               />
             }
           />
-          <Route path="/dashboard/create" element={<CreateTokenForm />} />
-          <Route path='/dashboard/trade/:tokenId' element={
+          <Route path="/create" element={<CreateTokenForm />} />
+          <Route path="/about" element={<About />} />
+          <Route path='/trade/:tokenId' element={
             <BuySell
               balance={balance} />
           } />
-          <Route path="/dashboard/explore/:tokenId" element={<CoinInfo />} />
-          <Route path="/dashboard/explore/:tokenId/trade"
+          <Route path="/explore/:tokenId" element={<CoinInfo />} />
+          <Route path="/explore/:tokenId/trade"
             element={
               <TradePage
                 refetchBalance={refetchBalance}

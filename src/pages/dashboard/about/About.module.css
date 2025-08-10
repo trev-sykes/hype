@@ -1,0 +1,82 @@
+/* Container */
+.container {
+    background: var(--color-neutral-100);
+    color: var(--color-neutral-900);
+    font-family: var(--font-family-text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+}
+
+/* Content wrapper */
+.content {
+    max-width: 1000px;
+    width: 100%;
+    text-align: center;
+    animation: fadeInUp 0.8s ease forwards;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+/* Fade in animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Logo */
+.logoContainer {
+    width: 150px;
+}
+
+/* Tagline */
+.tagline {
+    font-size: 1.1rem;
+    color: var(--color-neutral-700);
+    max-width: 600px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Features container */
+.features {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    /* Reduced from 1px to 0.5rem for consistent spacing */
+    width: 100%;
+    max-width: 600px;
+    /* Reduced from 800px to make the container narrower */
+    text-align: center;
+    padding: 0;
+}
+
+@media (min-width: 1024px) {
+    .features {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+        /* Consistent gap for desktop */
+    }
+}
+
+/* Individual feature */
+.feature {
+    padding: 0.5rem;
+    /* Reduced from 0.75rem to make features smaller */
+    font-weight: 500;
+    /* Slightly lighter font-weight for a less bulky feel */
+    font-size: 0.9rem;
+    /* Added to reduce text size */
+    color: var(--color-neutral-800);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}

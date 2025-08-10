@@ -95,7 +95,7 @@ export const DashboardHome = ({ tokens }: any) => {
 
             <section className={styles.actionsSection}>
                 <div className={styles.actions}>
-                    <Link to="/dashboard/explore" className={`${styles.ctaButton} ${styles.primary}`}>
+                    <Link to="/explore" className={`${styles.ctaButton} ${styles.primary}`}>
                         Explore
                     </Link>
                 </div>

@@ -213,13 +213,13 @@ export const CoinInfo: React.FC = () => {
             </div>
             <div className={styles.ctaWrapper}>
                 <Link
-                    to={`/dashboard/trade/${coin.tokenId}`}
+                    to={`/trade/${coin.tokenId}`}
                     className={`${styles.tradeButton} ${!showCTA ? styles.ctaHidden : ''}`}
                 >
                     Buy & Sell
                 </Link>
                 <Link
-                    to={`/dashboard/explore/${coin.tokenId}/trade`}
+                    to={`/explore/${coin.tokenId}/trade`}
                     className={`${styles.tradeButton} ${!showCTA ? styles.ctaHidden : ''}`}
                 >
                     Trade

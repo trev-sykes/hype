@@ -1,13 +1,11 @@
 import styles from "./Profile.module.css";
 import { useAccount, useEnsName, useDisconnect } from 'wagmi';
-import { useState } from 'react';
 import { BounceLoader } from "react-spinners";
 
 export function Profile({ openConnector }: any) {
     const { address, isConnected } = useAccount();
     const { data: ensName, status: ensStatus } = useEnsName({ address });
     const { disconnect } = useDisconnect();
-    const [hovered, setHovered] = useState(false);
 
     const ensLoading = ensStatus === 'pending';
     const formattedAddress = address ? `0x...${address.slice(-5)}` : '';
@@ -23,19 +21,22 @@ export function Profile({ openConnector }: any) {
     return (
         <div className={styles.profileContainer}>
             {isConnected ? (
-                <div className={styles.section}>
-                    <span
+                <div
+                    className={styles.section}
+                >
+                    <a
+                        href={`https://etherscan.io/address/${address}`}
+                        rel="norel"
+                        target="_blank"
                         className={styles.address}
-                        onMouseEnter={() => setHovered(true)}
-                        onMouseLeave={() => setHovered(false)}
                     >
                         {ensLoading ? (
                             <BounceLoader size={14} />
                         ) : ensName || ""}
                         {ensName ? " (" : ""}
-                        {hovered ? address : formattedAddress}
+                        {formattedAddress}
                         {ensName ? ")" : ""}
-                    </span>
+                    </a>
                     <button onClick={handleClick} className={styles.disconnectButton}>
                         Log Out
                     </button>
@@ -44,7 +45,8 @@ export function Profile({ openConnector }: any) {
                 <button onClick={handleClick} className={styles.connectButton}>
                     Log In
                 </button>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 }
