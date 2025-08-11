@@ -62,7 +62,8 @@ export function useTradesForTokens(tokenIds: string[]) {
     const tradesByToken = useTradeStore((state) => state.trades);
 
     // Only fetch if we don't already have trades for these tokens
-    const missingTokenIds = tokenIds.filter(id => !tradesByToken[id]);
+    const missingTokenIds = tokenIds.filter(id => !tradesByToken[id] || tradesByToken[id].length === 0);
+
 
     const { data, isSuccess, error } = useQuery({
         queryKey: ['token-trades', missingTokenIds.sort().join(',')],
@@ -80,7 +81,7 @@ export function useTradesForTokens(tokenIds: string[]) {
     }, [data, isSuccess]);
 
     useEffect(() => {
-        if (!parsedTrades.length) return;
+        if (!parsedTrades.length && missingTokenIds.length === 0) return;
 
         const groupedByToken: any = parsedTrades.reduce((acc, trade) => {
             if (!acc[trade.tokenId]) acc[trade.tokenId] = [];
@@ -88,10 +89,19 @@ export function useTradesForTokens(tokenIds: string[]) {
             return acc;
         }, {} as Record<string, Trade[]>);
 
+        // Set trades for tokens with trades
         for (const tokenId in groupedByToken) {
             setTrades(tokenId, groupedByToken[tokenId]);
         }
-    }, [parsedTrades, setTrades]);
+
+        // Set empty trades array for tokens with no trades
+        missingTokenIds.forEach(tokenId => {
+            if (!groupedByToken[tokenId]) {
+                setTrades(tokenId, []);
+            }
+        });
+    }, [parsedTrades, setTrades, missingTokenIds]);
+    [parsedTrades, setTrades]
 
     if (error) {
         console.error('[useTradesForTokens] Error fetching trades:', error);
@@ -135,7 +145,7 @@ export function useAllTrades() {
     const setTrades = useTradeStore((state) => state.setTrades);
     const trades: any[] = useTradeStore((state) => state.trades['all'] ?? []);
     const hydrated = useTradeStore(state => state.hydrated);
-    const shouldFetch = hydrated && trades.length === 0;
+    const shouldFetch = hydrated && !trades;
 
     const { data, isSuccess, error } = useQuery({
         queryKey: ['all-trades'],
@@ -144,7 +154,7 @@ export function useAllTrades() {
             return result;
         },
         enabled: shouldFetch, // 👈 prevents query if trades already exist
-        refetchInterval: 60_0000, // refresh every 1 minute
+        refetchInterval: false,    // disable automatic polling
         refetchOnWindowFocus: false, // disable on tab switch
     });
 

@@ -23,9 +23,9 @@ export const TokenCard: React.FC<TokenCardProps> = ({ coin, loadState }) => {
     const hasRunMap = useRef<Record<string, boolean>>({});
     const [priceDirection, setPriceDirection] = useState<'up' | 'down' | null>(null);
     const prevPriceRef = useRef<number | null>(null);
-    useEffect(() => {
-        console.log("COIN", coin);
-    }, [coin])
+    // useEffect(() => {
+    //     console.log("COIN", coin);
+    // }, [coin])
     useEffect(() => {
         const alreadySet = hasDominantColorBeenSet(coin.tokenId);
         const hasRun = hasRunMap.current[coin.tokenId];

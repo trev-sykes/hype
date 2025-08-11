@@ -13,7 +13,6 @@ import { TradePage } from './pages/dashboard/trade/TradePage'
 import { CoinInfo } from './pages/dashboard/coinInfo/CoinInfo'
 import { ScrollToTop } from './hooks/useScrollToTop'
 import { useTradeUpdater } from './hooks/useTradeUpdater'
-import { useTokenCreationUpdater } from './hooks/useNewTokenCreationUpdater'
 import { useTokens } from './hooks/useTokens'
 import { useUserTokenBalance } from './hooks/useUserBalance'
 import { useAllTrades } from './hooks/useTokenActivity'
@@ -29,9 +28,15 @@ import { useTokenImageChecker } from './hooks/useTokenImageChecker'
 
 export default function App() {
   useTradeUpdater();
-  useTokenCreationUpdater();
+  // useTokenCreationUpdater();
   useTokenImageChecker()
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000,
+      },
+    },
+  });
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>

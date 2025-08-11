@@ -70,7 +70,7 @@ export function useTokensRefresh(tokenId?: string) {
                         tokenId: token.tokenId.toString(),
                         name: token.name,
                         symbol: token.symbol,
-                        blockTimestamp: token.blockTimestamp,
+                        blockTimestamp: token.blockTimestamp ?? Math.floor(Date.now() / 1000),
                         uri: token.uri ?? null,
                         description: token.description ?? null,
                         imageUrl,

@@ -7,11 +7,8 @@ import { useWidth } from '../../../hooks/useWidth';
 import { TokenCard } from '../../../components/tokenCard/TokenCard';
 import type { Token } from '../../../types/token';
 import { ScrollToTopButton } from '../../../components/button/scrollToTop/ScrollToTopButton';
-import { timeAgoExplore } from '../../../utils/formatTimeAgo';
 import { useTokenStore } from '../../../store/allTokensStore';
-import { useTradeStore } from '../../../store/tradeStore';
-import { COOLDOWN_TIME, LAST_REFRESH_KEY, ONE_WEEK_SECONDS } from '../../../constants';
-import { Link } from 'react-router-dom';
+import { COOLDOWN_TIME, LAST_REFRESH_KEY } from '../../../constants';
 interface ExploreGridProps {
     tokens: any,
     fetchNextPage: any,
@@ -22,7 +19,6 @@ interface ExploreGridProps {
 }
 export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage, hasNextPage, loading, fetchStaticMetadata }) => {
     const { clearTokens } = useTokenStore();
-    const { clearTrades } = useTradeStore()
     const isOnline = useOnline();
     const viewportWidth = useWidth();
     const [searchTerm, setSearchTerm] = useState('');
@@ -42,7 +38,6 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
         }, 1000);
         return () => clearInterval(interval);
     }, []);
-    const [highlightedTokenId, setHighlightedTokenId] = useState<string | null>(null);
 
     const [cooldownRemaining, setCooldownRemaining] = useState(0);
     const [isCooldownActive, setIsCooldownActive] = useState<boolean | null>(false);
@@ -159,15 +154,6 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
             default: return 0;
         }
     });
-    const newestTokens = tokens
-        .sort((a: any, b: any) => parseInt(b.blockTimestamp) - parseInt(a.blockTimestamp))
-        // Filter tokens created within last week (using seconds timestamp)
-        .filter((token: any) => {
-            const created = parseInt(token.blockTimestamp);
-            const nowSeconds = Math.floor(Date.now() / 1000);
-            return nowSeconds - created <= ONE_WEEK_SECONDS;
-        })
-        .slice(0, 10);
     if (!isOnline) return <div className={styles.error}>No Internet Connection</div>;
 
     return (
@@ -208,9 +194,9 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                         </button>
                     )}
                 </div>
-                <Link to={'/'} className={styles.logoContainer}>
+                <div className={styles.logoContainer}>
                     <Logo background={true} size={viewportWidth > 500 ? '8rem' : '6rem'} />
-                </Link>
+                </div>
             </div>
 
 
@@ -248,14 +234,6 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
 
                     </div>
                 </div>
-                {/* <button
-                    onClick={async () => {
-                        clearTokens()
-                        clearTrades()
-                        await fetchStaticMetadata("Manual Refresh");
-                    }}>
-                    DEV REFRESH
-                </button> */}
                 <button
                     className={`${styles.refreshButton} ${isCooldownActive ? styles.disabled : ''}`}
                     disabled={isCooldownActive || isCooldownActive == null}
@@ -268,7 +246,6 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                         setCooldownRemaining(Math.ceil(COOLDOWN_TIME / 1000 / 60));
                         setIsCooldownActive(true);
                         clearTokens()
-                        clearTrades()
                         await fetchStaticMetadata("Manual Refresh");
                     }}
                 >
@@ -290,47 +267,6 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                     {isCooldownActive && isCooldownActive != null ? `${cooldownRemaining}m` : 'Refresh'}
                 </button>
             </div>
-            {
-                newestTokens.length > 0 && coinsToDisplay.length > 0 && !loading && (
-                    <div className={styles.newTokensBar}>
-                        <h2 className={styles.newTokensTitle}>Recently Created</h2>
-                        <div className={styles.newTokensScroll}>
-                            {newestTokens.map((coin: Token) => {
-                                // coin.blockTimestamp is probably a seconds timestamp (string or number)
-                                const createdTimestamp = Number(coin.blockTimestamp); // seconds
-                                return (
-                                    <div
-                                        key={coin.tokenId}
-                                        className={styles.newTokenCard}
-                                        onClick={() => {
-                                            const id = coin.tokenId.toString();
-                                            const el = tokenRefs.current.get(id);
-                                            if (el) {
-                                                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                                setHighlightedTokenId(id);
-                                                setTimeout(() => setHighlightedTokenId(null), 2000);
-                                            }
-                                        }}
-                                        style={{ cursor: 'pointer' }}
-                                    >
-                                        {!coin.imageUrl || coin.imageUrl === '' ? <div className={styles.imageFallback}></div> : <img
-                                            loading="lazy"
-                                            src={coin.imageUrl}
-                                            alt={coin.name || 'Coin'}
-                                            className={styles.newTokenImage}
-                                        />}
-                                        <div className={styles.newTokenInfo}>
-                                            <div className={styles.newTokenName}>{coin.name}</div>
-                                            <div className={styles.tokenAge}>{timeAgoExplore(createdTimestamp)}</div> {/* Use your helper */}
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )
-            }
-
             {/* Grid of Coins */}
             {
                 isSearching ? (
@@ -346,7 +282,7 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                                     ref={(el) => {
                                         tokenRefs.current.set(coin.tokenId.toString(), el);
                                     }}
-                                    className={`${styles.tokenWrapper} ${highlightedTokenId === coin.tokenId.toString() ? styles.highlight : ''}`}
+                                    className={`${styles.tokenWrapper}`}
                                 >
                                     <TokenCard
                                         key={coin.tokenId.toString()}

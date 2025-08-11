@@ -2,6 +2,9 @@
   --font-family-text: "Fira Code", monospace;
   --font-family-number: "Montserrat", "Fira Code", monospace;
 
+  --animation-fade-in-up: fadeInUp;
+  --animation-duration: 0.369s;
+
   --color-accent: #144c7e;
   --color-accent-light: #1c67a8;
   --color-burn: #ef5350;
@@ -36,7 +39,7 @@ html {
   padding: 0;
   transition: border 0.2s ease;
   height: 100%;
-  background: var(--color-neutral-300);
+  background: transparent;
   overflow-y: scroll;
 
 }
@@ -107,6 +110,18 @@ body {
   height: 8px;
 }
 
+/* Fade in animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 ::-webkit-scrollbar-thumb {
   background-color: var(--color-accent-light);

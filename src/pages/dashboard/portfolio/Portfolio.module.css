@@ -2,6 +2,14 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 1rem;
+    animation: var(--animation-fade-in-up) var(--animation-duration) ease forwards;
+}
+
+.logoWrapper {
+    display: flex;
+    justify-content: center;
+    /* or flex-start for left align */
+    margin-bottom: 1.5rem;
 }
 
 .totalBalanceBox {

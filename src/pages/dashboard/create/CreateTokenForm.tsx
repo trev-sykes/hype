@@ -196,7 +196,7 @@ const CreateTokenForm = () => {
                 <form className={styles.form} onSubmit={onSubmit}>
                     <div className={styles.formHeader}>
                         <h2>Create Your Coin</h2>
-                        <Logo size={'6rem'} />
+                        <Logo background={true} size={'10rem'} />
                     </div>
                     {!isOnline && (
                         <div className={styles.offlineContainer}>

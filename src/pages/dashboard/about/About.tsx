@@ -1,6 +1,5 @@
 import styles from './About.module.css';
 import Logo from '../../../components/logo/Logo';
-import { Link } from 'react-router-dom';
 
 const features = [
     "Bonding Curve Pricing",
@@ -14,9 +13,9 @@ const About = () => {
         <main className={styles.container}>
             <div className={styles.content}>
                 <h1>About Hype</h1>
-                <Link to="/" className={styles.logoContainer} aria-label="Homepage">
-                    <Logo size="8rem" />
-                </Link>
+                <div className={styles.logoContainer} aria-label="Homepage">
+                    <Logo background={true} size="8rem" />
+                </div>
                 <p className={styles.tagline}>
                     Hype is a decentralized marketplace for creating and trading ETH-backed tokens with quadratic bonding curves. Launch custom tokens with unique metadata, mint to buy low, burn to sell high, with prices adjusting dynamically based on supply. Creators earn 0.5% on mints in a transparent, ETH-reserved economy.
                 </p>

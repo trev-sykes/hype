@@ -6,6 +6,7 @@ import { PortfolioBalanceCard } from '../../../components/portfolioBalanceCard/P
 import styles from './Portfolio.module.css';
 import { useWidth } from '../../../hooks/useWidth';
 import { ScrollToTopButton } from '../../../components/button/scrollToTop/ScrollToTopButton';
+import Logo from '../../../components/logo/Logo';
 
 interface MyPortfolioProps {
     tokens: Token[];
@@ -58,8 +59,11 @@ export const Portfolio: React.FC<MyPortfolioProps> = ({ tokens }) => {
 
     return (
         <div className={styles.container}>
-
+            <div className={styles.logoWrapper}>
+                <Logo background={true} size={'8rem'} />
+            </div>
             <div className={styles.totalBalanceBox}>
+                <h2>Dashboard</h2>
                 <div className={styles.balanceValue}>
                     {totalUsd > 0
                         ? `$${(totalUsd.toFixed(2)).toString()}`

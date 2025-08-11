@@ -63,19 +63,32 @@ export function useTradeUpdater() {
     useEffect(() => {
         const interval = setInterval(async () => {
             const since = getLatestTimestamp('all');
+            const now = Math.floor(Date.now() / 1000); // current UNIX timestamp in seconds
+
+            console.log(`[TradeUpdater] Checking for new trades since timestamp: ${since}, current time: ${now}`);
+
+            if (since >= now) {
+                console.log('[TradeUpdater] No new trades expected, skipping fetch.');
+                return;
+            }
 
             try {
+                console.log('[TradeUpdater] Fetching new trades from GraphQL API...');
                 const result = await request(url, INCREMENTAL_QUERY, { since }, headers);
                 const newTrades = parseTrades(result);
 
-                newTrades.forEach((trade) => {
-                    appendTrade('all', trade);
-                });
-
+                if (newTrades.length > 0) {
+                    console.log(`[TradeUpdater] Received ${newTrades.length} new trades, updating store...`);
+                    newTrades.forEach((trade) => {
+                        appendTrade('all', trade);
+                    });
+                } else {
+                    console.log('[TradeUpdater] No new trades returned from API.');
+                }
             } catch (e) {
                 console.error('[TradeUpdater] Error fetching new trades', e);
             }
-        }, 3_000); // Every 3 seconds
+        }, 60_000); // every 60 seconds
 
         return () => clearInterval(interval);
     }, []);

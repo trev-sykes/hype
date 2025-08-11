@@ -1,48 +1,3 @@
-.newTokenContainer {
-    width: 50%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-
-}
-
-.newTokenCard {
-    position: relative;
-    /* slightly wider for horizontal layout */
-    border-radius: 10px;
-    padding: 0.5rem;
-    text-align: left;
-    display: flex;
-    flex-direction: row;
-    gap: 0.25rem;
-    text-decoration: none;
-}
-
-.newTokenContent {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-}
-
-.newTokenImage {
-    width: 70px;
-    /* smaller coin image */
-    height: 70px;
-    object-fit: cover;
-    border: 2px solid var(--color-accent-light);
-}
-
-.newTokenNameSide {
-    font-size: 0.7rem;
-    color: var(--color-neutral-600);
-    font-weight: 800;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex-grow: 1;
-}
-
 .pageContainer {
     width: 100%;
     height: 90vh;
@@ -52,6 +7,7 @@
     flex-direction: column;
     align-items: flex-start;
     font-family: var(--font-text);
+    animation: var(--animation-fade-in-up) var(--animation-duration) ease forwards;
 }
 
 .header {
@@ -114,8 +70,7 @@
 .sectionTitle {
     font-size: 1.25rem;
     font-weight: 700;
-    margin-bottom: 1rem;
-    padding-bottom: 0.25rem;
+    margin-bottom: .15rem;
 }
 
 .imageFallback {
@@ -156,4 +111,86 @@
 .primary:hover {
     background-color: var(--color-neutral-100);
     color: var(--color-accent);
+}
+
+.newTokenCard {
+    position: relative;
+    /* slightly wider for horizontal layout */
+    border-radius: 10px;
+    padding: 0.5rem;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    gap: 0.25rem;
+    text-decoration: none;
+}
+
+.newTokenNameSide {
+    font-size: 0.7rem;
+    color: var(--color-neutral-600);
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    max-width: 4rem;
+    /* or adjust this width to fit your layout */
+}
+
+.slidingTokenCard {
+    position: relative;
+    width: 100%;
+    width: 10rem;
+    height: 6rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.newTokenCard {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.newTokenContent {
+    display: flex;
+    align-items: flex-start;
+    gap: .3rem;
+}
+
+.newTokenImage {
+    width: 64px;
+    /* smaller coin image */
+    height: 64px;
+    object-fit: cover;
+    border: 2px solid var(--color-accent-light);
+}
+
+.indicatorContainer {
+    position: absolute;
+    top: 30%;
+    right: 35%;
+    display: flex;
+    gap: 0.15rem;
+}
+
+.indicator {
+    width: 5px;
+    height: 5px;
+    background-color: var(--color-neutral-600);
+    border-radius: 50%;
+    opacity: 0.4;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.activeIndicator {
+    opacity: 1;
+    width: 10px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, var(--color-neutral-800), var(--color-neutral-900));
 }

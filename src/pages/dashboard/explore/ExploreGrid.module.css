@@ -4,6 +4,7 @@
     margin: 0 auto;
     padding: 1.5rem;
     font-family: var(--font-family-text);
+    animation: var(--animation-fade-in-up) var(--animation-duration) ease forwards;
 }
 
 .header {
