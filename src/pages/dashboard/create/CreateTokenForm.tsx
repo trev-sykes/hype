@@ -302,7 +302,7 @@ const CreateTokenForm = () => {
                     </label>
 
                     <button type="submit" disabled={isSubmitting || isPending || !isOnline || isTxLoading}>
-                        {isSubmitting || isPending ? "Creating Your Coin..." : "Create My Coin"}
+                        {isSubmitting || isPending ? "Deploying..." : "Deploy"}
                     </button>
                     {uploadError}
                 </form>
