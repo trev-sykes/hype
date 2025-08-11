@@ -6,8 +6,14 @@ import type { Token } from '../../../types/token';
 import { timeAgoExplore } from '../../../utils/formatTimeAgo';
 import { getEthBalance } from '../../../hooks/useProtocolBalance';
 import { ETHBackedTokenMinterAddress } from '../../../services/ETHBackedTokenMinter';
-
-export const DashboardHome = ({ tokens }: any) => {
+const aboutLines = [
+    '> ETH-backed tokens',
+    '> Unique bonding curves',
+    '> Transparent creator fees',
+    '> Mint & burn freely',
+    '> self-contained economies',
+];
+export const DashboardHome = ({ tokens, trades }: any) => {
     const [ethBalance, setEthBalance] = useState<string | null>(null);
     const tokenRefs = useRef<Map<string, HTMLDivElement | null>>(new Map());
     useEffect(() => {
@@ -40,27 +46,33 @@ export const DashboardHome = ({ tokens }: any) => {
             <header className={styles.header}>
                 <h1 className={styles.title}>Hype</h1>
                 <p className={styles.subtitle}>Bonding Curve Marketplace</p>
-                <p className={styles.aboutText}>
-                    {'> '}ETH-backed tokens<br />
-                    {'> '}Unique bonding curves<br />
-                    {'> '}Transparent creator fees<br />
-                    {'> '}Mint & burn freely<br />
-                    {'> '}self-contained economies<br />
-                </p>
+                <div className={styles.aboutText}>
+                    {aboutLines.map((line, index) => (
+                        <p
+                            key={index}
+                            className={styles.aboutLine}
+                            style={{ animationDelay: `${index * 0.3}s` }}
+                        >
+                            {line}
+                        </p>
+                    ))}
+
+                </div>
             </header>
             <div className={styles.stats}>
-                <p>TVL = <span className={styles.statItem}>{ethBalance !== null ? `${ethBalance} ETH` : 'Loading...'}</span></p>
-                <p>Coins = <span className={styles.statItem}>{tokens?.length ?? 'Loading...'}</span></p>
+                <p>tvl = <span className={styles.statItem}>{ethBalance !== null ? `${ethBalance} ETH` : 'Loading...'}</span></p>
+                <p>coins = <span className={styles.statItem}>{tokens?.length ?? 'Loading...'}</span></p>
+                <p>trades = <span className={styles.statItem}>{trades?.length ?? 'Loading...'}</span></p>
             </div>
 
             <section className={styles.section}>
-                <h3 className={styles.sectionTitle}>Recently Added:</h3>
+                <h3 className={styles.sectionTitle}>New Coins:</h3>
                 <div className={styles.newTokenContainer}>
                     {newestTokens.map((coin: Token) => {
                         const createdTimestamp = Number(coin.blockTimestamp);
                         return (
                             <Link
-                                to={`/dashboard/explore/${coin.tokenId}`}
+                                to={`/explore/${coin.tokenId}`}
                                 key={coin.tokenId}
                                 className={styles.newTokenCard}
                                 onClick={() => {

@@ -60,7 +60,7 @@
     transition: all 0.3s ease;
     overflow: hidden;
     opacity: 1;
-    max-height: 300px;
+    max-height: 400px;
 }
 
 .hidden {
@@ -185,7 +185,7 @@
         justify-content: space-between;
         align-items: center;
         padding: 20px 24px;
-        max-height: 120px;
+        max-height: 320px;
         gap: 20px;
     }
 

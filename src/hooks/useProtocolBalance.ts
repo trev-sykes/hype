@@ -9,6 +9,5 @@ const client = createPublicClient({
 
 export async function getEthBalance(address: `0x${string}`) {
     const balance = await client.getBalance({ address })
-    console.log(`Balance of ${address}:`, balance)
     return balance
 }

@@ -62,7 +62,7 @@ function InnerApp() {
       <Routes>
         {/* <Route path="/" element={<LandingPage />} /> */}
         <Route element={<DashboardLayout />}>
-          <Route path="/" element={<DashboardHome tokens={tokens} />} />
+          <Route path="/" element={<DashboardHome tokens={tokens} trades={trades} />} />
           <Route
             path="/account"
             element={

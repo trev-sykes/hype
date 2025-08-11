@@ -172,10 +172,6 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>
-                <h1 className={styles.title}>Explore The Hype</h1>
-            </div>
-
             {/* Search Bar */}
             <div className={styles.searchContainer}>
                 <div>
