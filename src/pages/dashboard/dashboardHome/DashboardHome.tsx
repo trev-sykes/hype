@@ -1,34 +1,106 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { EtherSymbol } from 'ethers';
+import { fetchETHPrice } from '../../../api/fetchETHPrice';
 import styles from './DashboardHome.module.css';
 import { ONE_WEEK_SECONDS } from '../../../constants';
-// import { timeAgoExplore } from '../../../utils/formatTimeAgo';
 import { getEthBalance } from '../../../hooks/useProtocolBalance';
-import { ETHBackedTokenMinterAddress } from '../../../services/ETHBackedTokenMinter';
+import { ETHBackedTokenMinterAddress, ETHBackedTokenMinterABI } from '../../../services/ETHBackedTokenMinter';
+import { usePublicClient, useGasPrice, useAccount } from 'wagmi';
 import Logo from '../../../components/logo/Logo';
+import { encodeFunctionData } from 'viem';
+
 const aboutLines = [
-    '> ETH-backed tokens',
-    '> Unique bonding curves',
-    '> Transparent creator fees',
-    '> Mint & burn freely',
-    '> self-contained economies',
+    ' ETH-backed tokens',
+    ' Unique bonding curves',
+    ' Transparent creator fees',
+    ' Mint & burn freely',
+    ' self-contained economies',
 ];
+
 export const DashboardHome = ({ tokens, trades }: any) => {
+    const { address } = useAccount();
+    const [ethPrice, setEthPrice] = useState<any>(null);
     const [ethBalance, setEthBalance] = useState<string | null>(null);
+    const [createGasCost, setCreateGasCost] = useState<string | null>(null);
+    const [burnGasCost, setBurnGasCost] = useState<string | null>(null);
+    const publicClient = usePublicClient();
+    const { data: gasPrice } = useGasPrice();
     useEffect(() => {
         async function fetchBalance() {
             try {
                 const balanceBigInt = await getEthBalance(ETHBackedTokenMinterAddress);
-                // Convert balance from wei (bigint) to ETH string with decimals
+                console.log("Balance of protocool: ", balanceBigInt);
                 const balanceEth = (Number(balanceBigInt) / 1e18).toFixed(4);
                 setEthBalance(balanceEth);
             } catch (error) {
                 console.error('Failed to fetch ETH balance:', error);
             }
         }
+        async function getEthPrice() {
+            try {
+                const price = await fetchETHPrice();
+                setEthPrice(price);
+            } catch (err: any) {
+                console.error("Error fetching eth price ", err.message);
+            }
+        }
+
+        async function estimateCreateTokenCost() {
+            if (!gasPrice || !address) return;
+            try {
+                const data = encodeFunctionData({
+                    abi: ETHBackedTokenMinterABI,
+                    functionName: 'createToken',
+                    args: ["MyToken", "MTK", "ipfs://dummyhash"],
+                });
+
+                const gasEstimate = await publicClient.estimateGas({
+                    account: address,
+                    to: ETHBackedTokenMinterAddress,
+                    data,
+                });
+
+                const gasCostEth = Number(gasEstimate * gasPrice) / 1e18;
+                setCreateGasCost(gasCostEth.toFixed(6));
+            } catch (err) {
+                console.error("Failed to estimate createToken gas:", err);
+            }
+        }
+        async function estimateBurnCost() {
+            if (!gasPrice) return;
+
+            try {
+                const exampleTokenId = BigInt('17368710711605159157491190805338852470735509594458970056032278119866307769437');
+                const exampleAmount = 1; // dummy burn amount
+
+                const data = encodeFunctionData({
+                    abi: ETHBackedTokenMinterABI,
+                    functionName: 'burn',
+                    args: [exampleTokenId, exampleAmount],
+                });
+
+                const fromAddress = address ?? ETHBackedTokenMinterAddress;
+
+                const gasEstimate = await publicClient.estimateGas({
+                    account: fromAddress,
+                    to: ETHBackedTokenMinterAddress,
+                    data,
+                });
+
+                const gasCostEth = Number(gasEstimate * gasPrice) / 1e18;
+                setBurnGasCost(gasCostEth.toFixed(6));
+            } catch (err) {
+                console.error("Failed to estimate burn gas:", err);
+            }
+        }
+
+
         fetchBalance();
-    }, [ETHBackedTokenMinterAddress]);
+        getEthPrice();
+        estimateCreateTokenCost();
+        estimateBurnCost();
+    }, [gasPrice, publicClient, address]);
 
     const newestTokens = tokens
         .filter((token: any) => {
@@ -38,7 +110,6 @@ export const DashboardHome = ({ tokens, trades }: any) => {
         .sort((a: any, b: any) => {
             const aTimestamp = a.blockTimestamp ? parseInt(a.blockTimestamp) : parseInt(a.priceLastFetchedAt);
             const bTimestamp = b.blockTimestamp ? parseInt(b.blockTimestamp) : parseInt(b.priceLastFetchedAt);
-            // convert ms to seconds
             return bTimestamp / 1000 - aTimestamp / 1000;
         })
         .filter((token: any) => {
@@ -49,11 +120,10 @@ export const DashboardHome = ({ tokens, trades }: any) => {
             return nowSeconds - created <= ONE_WEEK_SECONDS;
         })
         .slice(0, 10);
-    // --- NEW: Sliding logic ---
-    const [selectedIndex, setSelectedIndex] = useState(0);
-    const SLIDE_DURATION = 5000; // 5 seconds per token
 
-    // Auto-slide effect
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const SLIDE_DURATION = 5000;
+
     useEffect(() => {
         const interval = setInterval(() => {
             setSelectedIndex((prevIndex) => (prevIndex + 1) % newestTokens.length);
@@ -61,17 +131,14 @@ export const DashboardHome = ({ tokens, trades }: any) => {
         return () => clearInterval(interval);
     }, [newestTokens.length]);
 
-    // Manual click to select token
     const handleClick = useCallback(
         (index: number) => {
             if (index !== selectedIndex) setSelectedIndex(index);
         },
         [selectedIndex]
     );
-
-
-    // Only showing relevant parts where classNames are added/changed
-
+    const ethToUsd = (ethAmount: string | null) =>
+        ethAmount && ethPrice ? (parseFloat(ethAmount) * ethPrice).toFixed(2) : null;
     return (
         <div className={styles.pageContainer}>
             <header className={styles.header}>
@@ -79,43 +146,48 @@ export const DashboardHome = ({ tokens, trades }: any) => {
                 <p className={styles.subtitle}>Bonding Curve Marketplace</p>
                 <div className={styles.aboutText}>
                     {aboutLines.map((line, index) => (
-                        <p
-                            key={index}
-                            className={styles.aboutLine}
-                            style={{ animationDelay: `${index * 0.3}s` }}
-                        >
+                        <p key={index} className={styles.aboutLine} style={{ animationDelay: `${index * 0.7}s` }}>
                             {line}
                         </p>
                     ))}
-
                 </div>
             </header>
+
             <div className={styles.stats}>
-                <p>tvl = <span className={styles.statItem}>{ethBalance !== null ? `${ethBalance} ${EtherSymbol}` : 'Loading...'}</span></p>
-                <p>coins = <span className={styles.statItem}>{tokens?.length ?? 'Loading...'}</span></p>
-                <p>trades = <span className={styles.statItem}>{trades?.length ?? 'Loading...'}</span></p>
+                <p>eth = <span className={styles.statItem}>${ethPrice ?? 'Loading...'}</span></p>
+                <p>
+                    create ={' '}
+                    <span className={styles.statItem}>
+                        {createGasCost ? `$${ethToUsd(createGasCost)}` : 'Loading...'}
+                    </span>
+                </p>
+                <p>
+                    mint ={' '}
+                    <span className={styles.statItem}>
+                        {burnGasCost ? `$${ethToUsd(burnGasCost)}` : 'Loading...'}
+                    </span>
+                </p>
+                <p>
+                    burn ={' '}
+                    <span className={styles.statItem}>
+                        {burnGasCost ? `$${ethToUsd(burnGasCost)}` : 'Loading...'}
+                    </span>
+                </p>
             </div>
+
 
             <section className={styles.section}>
                 <h3 className={styles.sectionTitle}>New Coins:</h3>
                 <div className={styles.slidingTokenCard}>
                     {newestTokens.length > 0 && (
-                        <div
-                            className={styles.newTokenCard}
-                        >
+                        <div className={styles.newTokenCard}>
                             <div className={styles.newTokenContent}>
                                 {!newestTokens[selectedIndex].imageUrl ? (
-                                    <Link
-                                        to={`/explore/${newestTokens[selectedIndex].tokenId}`}
-                                        style={{ cursor: 'pointer' }}
-                                    >
+                                    <Link to={`/explore/${newestTokens[selectedIndex].tokenId}`} style={{ cursor: 'pointer' }}>
                                         <div className={styles.imageFallback}></div>
                                     </Link>
                                 ) : (
-                                    <Link
-                                        to={`/explore/${newestTokens[selectedIndex].tokenId}`}
-                                        style={{ cursor: 'pointer' }}
-                                    >
+                                    <Link to={`/explore/${newestTokens[selectedIndex].tokenId}`} style={{ cursor: 'pointer' }}>
                                         <img
                                             loading="lazy"
                                             src={newestTokens[selectedIndex].imageUrl}
@@ -126,24 +198,40 @@ export const DashboardHome = ({ tokens, trades }: any) => {
                                 )}
                                 <div className={styles.newTokenNameSide}>
                                     {newestTokens[selectedIndex].symbol}
+                                    <div className={styles.indicatorContainer}>
+                                        {newestTokens.map((_: any, index: any) => (
+                                            <div
+                                                key={index}
+                                                onClick={() => handleClick(index)}
+                                                className={`${styles.indicator} ${selectedIndex === index ? styles.activeIndicator : ''}`}
+                                            />
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     )}
 
-                    <div className={styles.indicatorContainer}>
-                        {newestTokens.map((_: any, index: any) => (
-                            <div
-                                key={index}
-                                onClick={() => handleClick(index)}
-                                className={`${styles.indicator} ${selectedIndex === index ? styles.activeIndicator : ''
-                                    }`}
-                            />
-                        ))}
-                    </div>
                 </div>
             </section>
-
+            <section className={styles.section}>
+                <h3 className={styles.sectionTitle}>Stats:</h3>
+                <p>tvl ={' '}
+                    <span className={styles.statItem}>
+                        {ethBalance !== null ? `${ethBalance} ${EtherSymbol} ($${ethToUsd(ethBalance)})` : 'Loading...'}
+                    </span>
+                </p>
+                <p>coins ={' '}
+                    <span className={styles.statItem}>
+                        {tokens?.length ?? 'Loading...'}
+                    </span>
+                </p>
+                <p>trades ={' '}
+                    <span className={styles.statItem}>
+                        {trades?.length ?? 'Loading...'}
+                    </span>
+                </p>
+            </section>
             <section className={styles.actionsSection}>
                 <div className={styles.actions}>
                     <Link to="/explore" className={`${styles.ctaButton} ${styles.primary}`}>
@@ -153,5 +241,4 @@ export const DashboardHome = ({ tokens, trades }: any) => {
             </section>
         </div>
     );
-
 };

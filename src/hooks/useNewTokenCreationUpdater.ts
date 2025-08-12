@@ -21,7 +21,7 @@ export function useTokenCreationUpdater() {
     const getLatestTimestamp = useTokenStore((s: any) => s.getLatestTimestamp);
 
     useEffect(() => {
-        let retryDelay = 30000; // Start at 30 seconds
+        let retryDelay = 60000; // Start at 30 seconds
         let timeoutId: NodeJS.Timeout;
 
         const fetchTokens = async () => {
@@ -44,7 +44,7 @@ export function useTokenCreationUpdater() {
                 if (newTokens.length > 0) {
                 }
 
-                retryDelay = 30000; // Reset backoff on success
+                retryDelay = 60000; // Reset backoff on success
             } catch (e: any) {
                 if (e?.response?.status === 429) {
                     retryDelay = Math.min(retryDelay * 2, 5 * 60 * 1000); // Cap at 5 minutes

@@ -10,16 +10,26 @@ import Logo from '../../../components/logo/Logo';
 
 interface MyPortfolioProps {
     tokens: Token[];
+    ethPrice: any;
 }
 
-export const Portfolio: React.FC<MyPortfolioProps> = ({ tokens }) => {
+const valueOfTokens = (totalSupply: any, balance: any) => {
+    const basePrice = 0.000001;
+    const slope = 0.0000005;
+
+    // Refund formula for burning `balance` tokens from current supply `supply`
+    const value = balance * basePrice + (slope * balance * (2 * totalSupply - balance - 1)) / 2;
+    return value;
+}
+
+
+export const Portfolio: React.FC<MyPortfolioProps> = ({ tokens, ethPrice }) => {
     const [sortBy, setSortBy] = useState<'value' | 'balance' | 'name'>('value');
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const width = useWidth();
     const tokenIds = tokens.map((t) => t.tokenId);
     const { balances, loading, error, refetch } = useUserTokenBalances(tokens, tokenIds);
     const hydrated = useBalanceStore((s) => s.hydrated);
-
     const portfolioTokens = balances
         .filter((b) => b.balance && b.balance > 0)
         .map((b) => ({ ...b, ...tokens.find((t) => t.tokenId === b.tokenId) }))
@@ -35,9 +45,21 @@ export const Portfolio: React.FC<MyPortfolioProps> = ({ tokens }) => {
                     return 0;
             }
         });
+    const portfolioTokensWithBurnValue = portfolioTokens.map(token => {
+        // Assume token has totalSupply field; if not, you need to fetch it
+        const totalSupply: any = token.totalSupply ?? 0;
+        const balance = Number(token.balance) || 0;
 
-    const totalEth = portfolioTokens.reduce((acc, t) => acc + (t.totalValueEth ?? 0), 0);
-    const totalUsd = portfolioTokens.reduce((acc, t) => acc + (t.totalValueUsd ?? 0), 0);
+        const burnEthValue = valueOfTokens(balance, totalSupply);
+        const burnUsdValue = burnEthValue * ethPrice;
+
+        return {
+            ...token,
+            burnValueEth: burnEthValue,
+            burnValueUsd: burnUsdValue,
+        };
+    });
+    const totalBurnUsd = portfolioTokensWithBurnValue.reduce((acc, t) => acc + (t.burnValueUsd ?? 0), 0);
     if (!hydrated || loading) {
         return (
             <div className={styles.centeredBox}>
@@ -46,7 +68,12 @@ export const Portfolio: React.FC<MyPortfolioProps> = ({ tokens }) => {
             </div>
         );
     }
-
+    const totalEthAmount = portfolioTokens.reduce((accumulator: number, token: any) => {
+        const totalSupply = token.totalSupply ?? 0;
+        const balance = Number(token.balance) || 0;
+        const burnEthValue = valueOfTokens(balance, totalSupply);
+        return accumulator + burnEthValue;
+    }, 0);
     if (error) {
         return (
             <div className={styles.centeredBox}>
@@ -65,13 +92,13 @@ export const Portfolio: React.FC<MyPortfolioProps> = ({ tokens }) => {
             <div className={styles.totalBalanceBox}>
                 <h2>Dashboard</h2>
                 <div className={styles.balanceValue}>
-                    {totalUsd > 0
-                        ? `$${(totalUsd.toFixed(2)).toString()}`
-                        : `Ξ ${totalEth.toFixed(7).toString()}`
+                    {totalBurnUsd > 0
+                        ? `$${(totalBurnUsd.toFixed(2)).toString()}`
+                        : `Ξ ${totalEthAmount.toFixed(7).toString()}`
                     }
                 </div>
-                {totalUsd > 0 && (
-                    <div className={styles.ethValue}>Ξ {totalEth.toFixed(7)}</div>
+                {totalBurnUsd > 0 && (
+                    <div className={styles.ethValue}>Ξ {totalEthAmount.toFixed(7)}</div>
                 )}
             </div>
 
@@ -106,6 +133,10 @@ export const Portfolio: React.FC<MyPortfolioProps> = ({ tokens }) => {
             ) : (
                 <div className={`${styles.portfolioGrid} ${styles[viewMode]}`}>
                     {portfolioTokens.map((token: any) => {
+                        const totalSupply: any = token.totalSupply ?? 0;
+                        const balance = Number(token.balance) || 0;
+                        const burnEthValue = valueOfTokens(balance, totalSupply);
+                        const burnUsdValue = burnEthValue * ethPrice;
                         return (
                             <PortfolioBalanceCard
                                 coin={token}
@@ -114,8 +145,8 @@ export const Portfolio: React.FC<MyPortfolioProps> = ({ tokens }) => {
                                 name={token.name}
                                 symbol={token.symbol}
                                 balance={token.formatted}
-                                totalValueEth={token.totalValueEth}
-                                totalValueUsd={token.totalValueUsd}
+                                totalValueEth={burnEthValue}
+                                totalValueUsd={burnUsdValue}
                             />
                         )
                     })}

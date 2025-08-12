@@ -19,16 +19,18 @@ import { useAllTrades } from './hooks/useTokenActivity'
 import { useTradeStore } from './store/tradeStore'
 import { Portfolio } from './pages/dashboard/portfolio/Portfolio'
 import { BuySell } from './pages/dashboard/buySell/BuySell'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTokenStore } from './store/allTokensStore'
 import { useTokensRefresh } from './hooks/useTokensRefresh'
 import { useTokenImageChecker } from './hooks/useTokenImageChecker'
+import { fetchETHPrice } from './api/fetchETHPrice'
+import { useTokenCreationUpdater } from './hooks/useNewTokenCreationUpdater'
 
 
 
 export default function App() {
   useTradeUpdater();
-  // useTokenCreationUpdater();
+  useTokenCreationUpdater();
   useTokenImageChecker()
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -55,12 +57,25 @@ function InnerApp() {
   const { refetchBalance, tokenBalance }: any = useUserTokenBalance();
   const { address } = useAccount();
   const balance = useBalance({ address });
+
+  const [ethPrice, setEthPrice] = useState<any>(null);
   useEffect(() => {
     setTrades('all', trades);
   }, [trades])
   useEffect(() => {
     setTokens(tokens);
   }, [tokens])
+  useEffect(() => {
+    async function getEthPrice() {
+      try {
+        const price = await fetchETHPrice();
+        setEthPrice(price);
+      } catch (err: any) {
+        console.error("Error fetching eth price ", err.message);
+      }
+    }
+    getEthPrice()
+  }, [])
   return (
     <BrowserRouter>
       <ScrollToTop />
@@ -73,6 +88,7 @@ function InnerApp() {
             element={
               <Portfolio
                 tokens={tokens}
+                ethPrice={ethPrice}
               />
             }
           />

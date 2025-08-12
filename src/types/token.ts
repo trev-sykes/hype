@@ -16,7 +16,8 @@ export type Token = {
     percentChange?: number | null;
     priceLastFetchedAt?: number;
     needsPriceUpdate?: boolean;
-
+    burnValueEth?: any;
+    burnValueUsd?: any;
     // Color for charting
     dominantColor?: any;
 

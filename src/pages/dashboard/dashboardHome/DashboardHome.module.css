@@ -1,6 +1,5 @@
 .pageContainer {
     width: 100%;
-    height: 90vh;
     color: var(--color-neutral-900);
     text-align: left;
     display: flex;
@@ -105,7 +104,7 @@
 .primary {
     background-color: var(--color-accent);
     color: var(--color-neutral-100);
-    border: 1px solid var(--color-neutral-900);
+    border: 1px solid var(--color-accent);
 }
 
 .primary:hover {
@@ -143,15 +142,18 @@
     width: 10rem;
     height: 6rem;
     display: flex;
-    align-items: flex-start;
+    flex-direction: column;
+    overflow: visible;
+    align-items: center;
     justify-content: flex-start;
     overflow: hidden;
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
 }
 
 .newTokenCard {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     text-decoration: none;
     color: inherit;
 }
@@ -159,6 +161,7 @@
 .newTokenContent {
     display: flex;
     align-items: flex-start;
+    justify-content: flex-start;
     gap: .3rem;
 }
 
@@ -167,30 +170,42 @@
     /* smaller coin image */
     height: 64px;
     object-fit: cover;
-    border: 2px solid var(--color-accent-light);
+    border: 1px solid var(--color-accent);
 }
 
 .indicatorContainer {
-    position: absolute;
-    top: 30%;
-    right: 35%;
+    position: relative;
     display: flex;
     gap: 0.15rem;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.indicatorContainer::-webkit-scrollbar {
+    height: 4px;
+}
+
+.indicatorContainer::-webkit-scrollbar-thumb {
+    background-color: var(--color-neutral-400);
+    border-radius: 2px;
 }
 
 .indicator {
-    width: 5px;
-    height: 5px;
+    flex: 0 0 auto;
+    /* prevent shrinking */
+    width: 6px;
+    height: 6px;
     background-color: var(--color-neutral-600);
     border-radius: 50%;
     opacity: 0.4;
     cursor: pointer;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, width 0.3s ease;
 }
+
 
 .activeIndicator {
     opacity: 1;
-    width: 10px;
+    width: 12px;
     border-radius: 999px;
     background: linear-gradient(180deg, var(--color-neutral-800), var(--color-neutral-900));
 }
