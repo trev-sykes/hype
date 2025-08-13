@@ -17,7 +17,7 @@ async function fetchImageUrlFromUri(uri: string): Promise<string | null> {
         try {
             const parsed = JSON.parse(cached);
             if (parsed?.imageUrl) {
-                console.log('[IPFS CACHE] Using cached imageUrl for:', cid);
+                // console.log('[IPFS CACHE] Using cached imageUrl for:', cid);
                 return parsed.imageUrl;
             }
         } catch (e) {
@@ -29,7 +29,7 @@ async function fetchImageUrlFromUri(uri: string): Promise<string | null> {
     for (const gateway of IPFS_GATEWAYS) {
         const url = `${gateway}${cid}`;
         try {
-            console.log(`[IPFS FETCH] Trying URL: ${url}`);
+            // console.log(`[IPFS FETCH] Trying URL: ${url}`);
             const res = await fetch(url, { cache: 'no-store' });
             if (!res.ok) {
                 console.warn(`[IPFS FETCH] Non-OK status ${res.status} from ${url}`);
@@ -40,7 +40,7 @@ async function fetchImageUrlFromUri(uri: string): Promise<string | null> {
             if (metadata?.image) {
                 // Convert image URI to full gateway URL
                 const imageUrl = convertToIpfsUrl(metadata.image, gateway);
-                console.log(`[IPFS FETCH] Found image for CID ${cid}: ${imageUrl}`);
+                // console.log(`[IPFS FETCH] Found image for CID ${cid}: ${imageUrl}`);
 
                 // Cache image URL
                 localStorage.setItem(cacheKey, JSON.stringify({ imageUrl }));
@@ -68,12 +68,12 @@ export function useTokenImageChecker() {
             const now = Date.now();
 
             if (processingRef.current) {
-                console.log('⏳ Already processing, skipping this run.');
+                // console.log('⏳ Already processing, skipping this run.');
                 return;
             }
 
             if (now - lastRunRef.current < THROTTLE_MS) {
-                console.log('⏱️ Throttled. Skipping run.');
+                // console.log('⏱️ Throttled. Skipping run.');
                 return;
             }
 
@@ -81,18 +81,18 @@ export function useTokenImageChecker() {
             lastRunRef.current = now;
 
             // Step 1: Fix tokens that have URI but missing imageUrl
-            const tokensWithUriMissingImage = tokens.filter(
-                token => typeof token.uri === 'string' && token.uri.trim() !== '' && !token.imageUrl
-            );
+            // const tokensWithUriMissingImage = tokens.filter(
+            //     token => typeof token.uri === 'string' && token.uri.trim() !== '' && !token.imageUrl
+            // );
 
-            console.log(`🔍 Found ${tokensWithUriMissingImage.length} tokens missing imageUrl with valid URI.`);
+            // console.log(`🔍 Found ${tokensWithUriMissingImage.length} tokens missing imageUrl with valid URI.`);
 
             const tokensAfterImageFix = await Promise.all(
                 tokens.map(async token => {
                     if (token.uri && !token.imageUrl) {
                         const imageUrl = await fetchImageUrlFromUri(token.uri);
                         if (imageUrl) {
-                            console.log(`✅ Updated imageUrl for token ${token.tokenId}`);
+                            // console.log(`✅ Updated imageUrl for token ${token.tokenId}`);
                             return { ...token, imageUrl };
                         } else {
                             console.warn(`⚠️ Failed to update imageUrl from URI for token ${token.tokenId}`);
@@ -107,12 +107,12 @@ export function useTokenImageChecker() {
                 token => !token.uri && !token.imageUrl
             );
 
-            console.log(`🧵 Found ${tokensMissingUri.length} tokens missing both uri and imageUrl.`);
+            // console.log(`🧵 Found ${tokensMissingUri.length} tokens missing both uri and imageUrl.`);
 
             if (tokensMissingUri.length > 0) {
                 try {
                     const rawMetadata = await fetchMetaDataFromBlockchain(0, tokens.length);
-                    console.log(`📦 Fetched ${rawMetadata.length} raw metadata entries.`);
+                    // console.log(`📦 Fetched ${rawMetadata.length} raw metadata entries.`);
 
                     const tokensAfterMetadataFix = tokensAfterImageFix.map(token => {
                         if (!token.uri && !token.imageUrl) {
@@ -124,7 +124,7 @@ export function useTokenImageChecker() {
                                 const newUri = refreshed.uri ?? null;
                                 const newImage = refreshed.image ? convertToIpfsUrl(refreshed.image) : null;
 
-                                console.log(`🔁 Refreshed token ${token.tokenId} — uri: ${!!newUri}, image: ${!!newImage}`);
+                                // console.log(`🔁 Refreshed token ${token.tokenId} — uri: ${!!newUri}, image: ${!!newImage}`);
 
                                 return {
                                     ...token,

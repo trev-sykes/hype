@@ -142,30 +142,22 @@
     width: 10rem;
     height: 6rem;
     display: flex;
-    flex-direction: column;
-    overflow: visible;
-    align-items: center;
-    justify-content: flex-start;
+    flex-direction: row;
     overflow: hidden;
     margin-bottom: .5rem;
 }
 
-.newTokenCard {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    text-decoration: none;
-    color: inherit;
-}
-
 .newTokenContent {
     display: flex;
+    flex-direction: row;
     align-items: flex-start;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: .3rem;
+    width: 100%;
 }
 
 .newTokenImage {
+    flex: 1;
     width: 64px;
     /* smaller coin image */
     height: 64px;

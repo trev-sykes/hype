@@ -8,9 +8,21 @@ import TransparentCandlestickChart from '../chart/LineChart';
 import { useTokenStore } from '../../store/allTokensStore';
 import { useTokenActivity } from '../../hooks/useTokenActivity';
 import clsx from 'clsx'; // optional utility for combining classNames
+import { formatUnits } from 'viem';
 interface TokenCardProps {
     coin: any;
     loadState?: boolean | null;
+}
+function formatPrice(price: string | number): string {
+    const priceNum = typeof price === 'string' ? parseFloat(price) : price;
+    if (priceNum === 0) return '0';
+
+    // Check if already formatted (e.g., less than 1)
+    if (priceNum < 1) return priceNum.toString();
+
+    // Else, format assuming 12 decimals (divide by 1e12)
+    const formatted = parseFloat(formatUnits(BigInt(priceNum), 18))
+    return formatted.toFixed(6); // 6 decimal places for display
 }
 
 export const TokenCard: React.FC<TokenCardProps> = ({ coin, loadState }) => {
@@ -187,8 +199,9 @@ export const TokenCard: React.FC<TokenCardProps> = ({ coin, loadState }) => {
             <div className={styles.priceSection}>
                 <p>
                     <span className={styles.priceValue}>
-                        {coin.price != null ? coin.price.toString() : 'N/A'}
+                        {coin.price != null ? formatPrice(coin.price) : 'N/A'}
                     </span>
+
                 </p>
             </div>
 

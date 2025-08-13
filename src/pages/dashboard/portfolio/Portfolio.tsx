@@ -50,7 +50,7 @@ export const Portfolio: React.FC<MyPortfolioProps> = ({ tokens, ethPrice }) => {
         const totalSupply: any = token.totalSupply ?? 0;
         const balance = Number(token.balance) || 0;
 
-        const burnEthValue = valueOfTokens(balance, totalSupply);
+        const burnEthValue = valueOfTokens(totalSupply, balance);
         const burnUsdValue = burnEthValue * ethPrice;
 
         return {
@@ -71,9 +71,10 @@ export const Portfolio: React.FC<MyPortfolioProps> = ({ tokens, ethPrice }) => {
     const totalEthAmount = portfolioTokens.reduce((accumulator: number, token: any) => {
         const totalSupply = token.totalSupply ?? 0;
         const balance = Number(token.balance) || 0;
-        const burnEthValue = valueOfTokens(balance, totalSupply);
+        const burnEthValue = valueOfTokens(totalSupply, balance);
         return accumulator + burnEthValue;
     }, 0);
+
     if (error) {
         return (
             <div className={styles.centeredBox}>
@@ -135,7 +136,7 @@ export const Portfolio: React.FC<MyPortfolioProps> = ({ tokens, ethPrice }) => {
                     {portfolioTokens.map((token: any) => {
                         const totalSupply: any = token.totalSupply ?? 0;
                         const balance = Number(token.balance) || 0;
-                        const burnEthValue = valueOfTokens(balance, totalSupply);
+                        const burnEthValue = valueOfTokens(totalSupply, balance);
                         const burnUsdValue = burnEthValue * ethPrice;
                         return (
                             <PortfolioBalanceCard

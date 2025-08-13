@@ -23,7 +23,6 @@ export const DashboardHome = ({ tokens, trades }: any) => {
     const [ethPrice, setEthPrice] = useState<any>(null);
     const [ethBalance, setEthBalance] = useState<string | null>(null);
     const [createGasCost, setCreateGasCost] = useState<string | null>(null);
-    const [burnGasCost, setBurnGasCost] = useState<string | null>(null);
     const publicClient = usePublicClient();
     const { data: gasPrice } = useGasPrice();
     useEffect(() => {
@@ -67,39 +66,9 @@ export const DashboardHome = ({ tokens, trades }: any) => {
                 console.error("Failed to estimate createToken gas:", err);
             }
         }
-        async function estimateBurnCost() {
-            if (!gasPrice) return;
-
-            try {
-                const exampleTokenId = BigInt('17368710711605159157491190805338852470735509594458970056032278119866307769437');
-                const exampleAmount = 1; // dummy burn amount
-
-                const data = encodeFunctionData({
-                    abi: ETHBackedTokenMinterABI,
-                    functionName: 'burn',
-                    args: [exampleTokenId, exampleAmount],
-                });
-
-                const fromAddress = address ?? ETHBackedTokenMinterAddress;
-
-                const gasEstimate = await publicClient.estimateGas({
-                    account: fromAddress,
-                    to: ETHBackedTokenMinterAddress,
-                    data,
-                });
-
-                const gasCostEth = Number(gasEstimate * gasPrice) / 1e18;
-                setBurnGasCost(gasCostEth.toFixed(6));
-            } catch (err) {
-                console.error("Failed to estimate burn gas:", err);
-            }
-        }
-
-
         fetchBalance();
         getEthPrice();
         estimateCreateTokenCost();
-        estimateBurnCost();
     }, [gasPrice, publicClient, address]);
 
     const newestTokens = tokens
@@ -159,18 +128,6 @@ export const DashboardHome = ({ tokens, trades }: any) => {
                     create ={' '}
                     <span className={styles.statItem}>
                         {createGasCost ? `$${ethToUsd(createGasCost)}` : 'Loading...'}
-                    </span>
-                </p>
-                <p>
-                    mint ={' '}
-                    <span className={styles.statItem}>
-                        {burnGasCost ? `$${ethToUsd(burnGasCost)}` : 'Loading...'}
-                    </span>
-                </p>
-                <p>
-                    burn ={' '}
-                    <span className={styles.statItem}>
-                        {burnGasCost ? `$${ethToUsd(burnGasCost)}` : 'Loading...'}
                     </span>
                 </p>
             </div>

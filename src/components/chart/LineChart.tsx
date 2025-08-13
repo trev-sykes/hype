@@ -363,7 +363,6 @@ export default function LineChart({
             }
 
             if (!width && !height && currentPoint && currentPrice) {
-                console.log("CURRPRICE: ", currentPrice)
                 markers.push({
                     time: currentPoint.time,
                     position: 'aboveBar',

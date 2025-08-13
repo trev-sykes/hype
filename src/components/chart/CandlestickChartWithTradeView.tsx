@@ -77,7 +77,7 @@ export default function CandlestickChartWithTradeView({ coin, trades, interval =
                 tokenId: 1n,
                 amount: 1n,
                 cost: 1n,
-                price: 0.001,
+                price: 0.000001,
                 timestamp: firstTradeTime - 1,
                 type: 'mint' as const
             };

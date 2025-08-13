@@ -1,5 +1,5 @@
 export function convertToIpfsUrl(uri: string, gateway = 'https://ipfs.io/ipfs/') {
-    console.log('[convertToIpfsUrl] Received URI:', uri);
+    // console.log('[convertToIpfsUrl] Received URI:', uri);
     if (!uri) {
         console.warn('[convertToIpfsUrl] URI is null or undefined');
         return null;
@@ -9,15 +9,15 @@ export function convertToIpfsUrl(uri: string, gateway = 'https://ipfs.io/ipfs/')
 
     if (uri.startsWith('ipfs://')) {
         hash = uri.slice(7);
-        console.log('[convertToIpfsUrl] Removed ipfs:// prefix:', hash);
+        // console.log('[convertToIpfsUrl] Removed ipfs:// prefix:', hash);
     }
     if (hash.startsWith('ipfs/')) {
         hash = hash.slice(5);
-        console.log('[convertToIpfsUrl] Removed ipfs/ prefix:', hash);
+        // console.log('[convertToIpfsUrl] Removed ipfs/ prefix:', hash);
     }
 
     const fullUrl = `${gateway}${hash}`;
-    console.log('[convertToIpfsUrl] Constructed URL:', fullUrl);
+    // console.log('[convertToIpfsUrl] Constructed URL:', fullUrl);
     return fullUrl;
 }
 
@@ -29,18 +29,18 @@ export const IPFS_GATEWAYS = [
 ];
 
 export function extractCid(uri: string): string {
-    console.log('[extractCid] Extracting CID from:', uri);
+    // console.log('[extractCid] Extracting CID from:', uri);
     const cid = uri
         .replace(/^ipfs:\/\/ipfs\//, '')
         .replace(/^ipfs:\/\//, '')
         .replace(/^ipfs\//, '')
         .replace(/^https?:\/\/[^/]+\/ipfs\//, '');
-    console.log('[extractCid] Extracted CID:', cid);
+    // console.log('[extractCid] Extracted CID:', cid);
     return cid;
 }
 
 function fetchWithTimeout(resource: string, options = {}, timeout = 15000) {
-    console.log('[fetchWithTimeout] Fetching:', resource, 'with timeout:', timeout);
+    // console.log('[fetchWithTimeout] Fetching:', resource, 'with timeout:', timeout);
     return new Promise<Response>((resolve, reject) => {
         const controller = new AbortController();
         const id = setTimeout(() => {
@@ -58,10 +58,10 @@ function fetchWithTimeout(resource: string, options = {}, timeout = 15000) {
 async function fetchWithBackoff(url: string, retries = 3, delay = 1000, timeout = 5000): Promise<Response> {
     for (let attempt = 0; attempt < retries; attempt++) {
         try {
-            console.log(`[fetchWithBackoff] Attempt ${attempt + 1} to fetch: ${url}`);
+            // console.log(`[fetchWithBackoff] Attempt ${attempt + 1} to fetch: ${url}`);
             const res = await fetchWithTimeout(url, { cache: "no-store" }, timeout);
             if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-            console.log(`[fetchWithBackoff] Success on attempt ${attempt + 1} for ${url}`);
+            // console.log(`[fetchWithBackoff] Success on attempt ${attempt + 1} for ${url}`);
             return res;
         } catch (err: any) {
             console.warn(`[fetchWithBackoff] Attempt ${attempt + 1} failed for ${url}:`, err.message);
@@ -77,18 +77,18 @@ async function fetchWithBackoff(url: string, retries = 3, delay = 1000, timeout 
 }
 
 export async function fetchIpfsMetadata(uri: string): Promise<any | null> {
-    console.log('[fetchIpfsMetadata] Fetching metadata for URI:', uri);
+    // console.log('[fetchIpfsMetadata] Fetching metadata for URI:', uri);
     const cid = extractCid(uri);
     const cacheKey = `ipfs_${cid}`;
 
     try {
         const cached = localStorage.getItem(cacheKey);
         if (cached) {
-            console.log('[fetchIpfsMetadata] Found cached data for:', cacheKey);
+            // console.log('[fetchIpfsMetadata] Found cached data for:', cacheKey);
             try {
                 const parsed = JSON.parse(cached);
                 if (parsed && parsed.image) {
-                    console.log('[fetchIpfsMetadata] Returning cached metadata');
+                    // console.log('[fetchIpfsMetadata] Returning cached metadata');
                     return parsed;
                 } else {
                     console.warn('[fetchIpfsMetadata] Cached data is invalid or missing image field');
@@ -103,14 +103,14 @@ export async function fetchIpfsMetadata(uri: string): Promise<any | null> {
 
     for (const gateway of IPFS_GATEWAYS) {
         const url = `${gateway}${cid}`;
-        console.log('[fetchIpfsMetadata] Trying gateway:', gateway);
+        // console.log('[fetchIpfsMetadata] Trying gateway:', gateway);
         try {
             const res = await fetchWithBackoff(url);
             const json = await res.json();
-            console.log('[fetchIpfsMetadata] Received response JSON:', json);
+            // console.log('[fetchIpfsMetadata] Received response JSON:', json);
 
             if (json && json.image) {
-                console.log('[fetchIpfsMetadata] Metadata has image. Caching and returning.');
+                // console.log('[fetchIpfsMetadata] Metadata has image. Caching and returning.');
                 localStorage.setItem(cacheKey, JSON.stringify(json));
                 return json;
             } else {

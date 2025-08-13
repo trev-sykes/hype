@@ -11,14 +11,22 @@ import { useScrollDirection } from '../../../hooks/useScrollDirection';
 import { useTokenStore } from '../../../store/allTokensStore';
 import { fetchETHPrice } from "../../../api/fetchETHPrice"
 import { formatEther } from 'viem';
+const valueOfTokens = (totalSupply: any, balance: any) => {
+    const basePrice = 0.000001;
+    const slope = 0.0000005;
+
+    // Refund formula for burning `balance` tokens from current supply `supply`
+    const value = balance * basePrice + (slope * balance * (2 * totalSupply - balance - 1)) / 2;
+    return value;
+}
 
 export const CoinInfo: React.FC = () => {
-    const { balanceEth, totalValueEth } = useUserTokenBalance();
+    const { balanceEth } = useUserTokenBalance();
     const [imageLoaded, setImageLoaded] = useState<boolean | null>(null);
     const [activeTab, setActiveTab] = useState<'balance' | 'insights'>('balance');
     const [showCTA, setShowCTA] = useState(true);
     const [isImageToggled, setIsImageToggled] = useState<boolean>(false);
-    const [ethPriceUSD, setEthPriceUSD] = useState<number | null>(null);
+    const [ethPriceUSD, setEthPriceUSD] = useState<any>(null);
     const { getTokenById } = useTokenStore();
     const { setCoin } = useCoinStore();
     const { tokenId }: any = useParams<{ tokenId: string }>();
@@ -67,6 +75,9 @@ export const CoinInfo: React.FC = () => {
             if (bottomRef.current) observer.unobserve(bottomRef.current);
         };
     }, [isScrollingUp]);
+    const totalSupply: any = coin.totalSupply ?? 0;
+    const burnEthValue = valueOfTokens(totalSupply, balanceEth);
+    const burnUsdValue = burnEthValue * ethPriceUSD;
     if (!coin) {
         return (
             <div className={styles.loadingContainer}>
@@ -166,9 +177,9 @@ export const CoinInfo: React.FC = () => {
                                     {balanceEth} {coin.symbol}
                                 </p>
                                 <p className={styles.ethValue}>
-                                    ≈ {totalValueEth?.toFixed(7)} ETH
+                                    ≈ {burnEthValue?.toFixed(7)} ETH
                                     {ethPriceUSD !== null && balanceEth !== undefined && (
-                                        <> (~${(totalValueEth * ethPriceUSD).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</>
+                                        <> (~${burnUsdValue.toFixed(2)})</>
                                     )}
                                 </p>
                             </div>
