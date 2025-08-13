@@ -18,9 +18,10 @@ type TradeMode = 'BUY' | 'SELL';
 
 interface Props {
     balance: any;
+    fetchStaticMetadata: any;
 }
 
-export const BuySell: React.FC<Props> = ({ balance }) => {
+export const BuySell: React.FC<Props> = ({ balance, fetchStaticMetadata }) => {
     const { tokenId }: any = useParams<{ tokenId: string }>();
     const { address } = useAccount();
     const { setAlert } = useAlertStore();
@@ -116,6 +117,7 @@ export const BuySell: React.FC<Props> = ({ balance }) => {
             actionTypeRef.current = null;
             amountRef.current = null;
             setAmount("");
+            await fetchStaticMetadata("burn");
         }
     };
 
@@ -147,6 +149,7 @@ export const BuySell: React.FC<Props> = ({ balance }) => {
             });
 
             setAmount("");
+            await fetchStaticMetadata("burn");
         } catch (error: any) {
             const message = error instanceof Error ? error.message : 'Unknown error';
             setAlert({
@@ -328,6 +331,7 @@ export const BuySell: React.FC<Props> = ({ balance }) => {
                         e.stopPropagation();
                         switchCurrency();
                     }}
+                    style={{ cursor: 'pointer' }}
                 >
                     {mode == "BUY" && <ArrowUpDown size={10} />} ≈ {getDisplayConversion()}
                 </div>

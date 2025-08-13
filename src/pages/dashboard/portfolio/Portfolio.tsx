@@ -138,6 +138,13 @@ export const Portfolio: React.FC<MyPortfolioProps> = ({ tokens, ethPrice }) => {
                         const balance = Number(token.balance) || 0;
                         const burnEthValue = valueOfTokens(totalSupply, balance);
                         const burnUsdValue = burnEthValue * ethPrice;
+                        console.log(`
+                            totalSupply: ${totalSupply}
+                            balance: ${balance}
+                            burnEthValue: ${burnEthValue}
+                            burnUsdValue: ${burnUsdValue}
+                          `);
+
                         return (
                             <PortfolioBalanceCard
                                 coin={token}

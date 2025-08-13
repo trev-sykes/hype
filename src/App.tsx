@@ -109,7 +109,9 @@ function InnerApp() {
           <Route path="/about" element={<About />} />
           <Route path='/trade/:tokenId' element={
             <BuySell
-              balance={balance} />
+              balance={balance}
+              fetchStaticMetadata={fetchStaticMetadata}
+            />
           } />
           <Route path="/explore/:tokenId" element={<CoinInfo />} />
           <Route path="/explore/:tokenId/trade"
