@@ -24,6 +24,18 @@ export const DashboardHome = ({ tokens, trades }: any) => {
     const [ethPrice, setEthPrice] = useState<any>(null);
     const [ethBalance, setEthBalance] = useState<string | null>(null);
     const [createGasCost, setCreateGasCost] = useState<string | null>(null);
+
+    const [loaderTimedOut, setLoaderTimedOut] = useState(false);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setLoaderTimedOut(true);
+        }, 5000); // 5 seconds fallback
+
+        return () => clearTimeout(timeout);
+    }, []);
+
+
     const publicClient = usePublicClient();
     const { data: gasPrice } = useGasPrice();
     useEffect(() => {
@@ -106,8 +118,15 @@ export const DashboardHome = ({ tokens, trades }: any) => {
         },
         [selectedIndex]
     );
-    const ethToUsd = (ethAmount: string | null) =>
-        ethAmount && ethPrice ? (parseFloat(ethAmount) * ethPrice).toFixed(2) : null;
+
+    const createGasCostUsd = ethPrice && createGasCost
+        ? (parseFloat(createGasCost) * ethPrice).toFixed(2)
+        : null;
+
+    const ethBalanceUsd = ethPrice && ethBalance
+        ? (parseFloat(ethBalance) * ethPrice).toFixed(2)
+        : null;
+
     return (
         <div className={styles.pageContainer}>
             <header className={styles.header}>
@@ -129,14 +148,15 @@ export const DashboardHome = ({ tokens, trades }: any) => {
                         <p>
                             create ={' '}
                             <span className={styles.statItem}>
-                                {`$${ethToUsd(createGasCost)}`}
+                                {`$${createGasCostUsd}`}
                             </span>
                         </p>
                     </>
-                ) : (
+                ) : loaderTimedOut ? null : (
                     <BarLoader />
                 )}
             </div>
+
 
 
             <section className={styles.section}>
@@ -181,7 +201,7 @@ export const DashboardHome = ({ tokens, trades }: any) => {
                 <h3 className={styles.sectionTitle}>Stats:</h3>
                 <p>tvl ={' '}
                     <span className={styles.statItem}>
-                        {ethBalance !== null ? `${ethBalance} ${EtherSymbol} ($${ethToUsd(ethBalance)})` : 'Loading...'}
+                        {ethBalance !== null ? `${ethBalance} ${EtherSymbol} ($${ethBalanceUsd})` : 'Loading...'}
                     </span>
                 </p>
                 <p>coins ={' '}
