@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { EtherSymbol } from 'ethers';
 import { fetchETHPrice } from '../../../api/fetchETHPrice';
 import styles from './DashboardHome.module.css';
-import { ONE_WEEK_SECONDS } from '../../../constants';
+import { ONE_MONTH_SECONDS } from '../../../constants';
 import { getEthBalance } from '../../../hooks/useProtocolBalance';
 import { ETHBackedTokenMinterAddress, ETHBackedTokenMinterABI } from '../../../services/ETHBackedTokenMinter';
 import { usePublicClient, useGasPrice, useAccount } from 'wagmi';
@@ -29,7 +29,6 @@ export const DashboardHome = ({ tokens, trades }: any) => {
         async function fetchBalance() {
             try {
                 const balanceBigInt = await getEthBalance(ETHBackedTokenMinterAddress);
-                console.log("Balance of protocool: ", balanceBigInt);
                 const balanceEth = (Number(balanceBigInt) / 1e18).toFixed(4);
                 setEthBalance(balanceEth);
             } catch (error) {
@@ -86,7 +85,7 @@ export const DashboardHome = ({ tokens, trades }: any) => {
                 ? parseInt(token.blockTimestamp)
                 : Math.floor(parseInt(token.priceLastFetchedAt) / 1000);
             const nowSeconds = Math.floor(Date.now() / 1000);
-            return nowSeconds - created <= ONE_WEEK_SECONDS;
+            return nowSeconds - created <= ONE_MONTH_SECONDS;
         })
         .slice(0, 10);
 

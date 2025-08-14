@@ -1,5 +1,4 @@
 .profileContainer {
-
     color: var(--color-neutral-900);
     border-radius: 8px;
     box-sizing: border-box;
@@ -52,8 +51,8 @@
 /* For better responsiveness */
 @media (max-width: 480px) {
     .profileContainer {
+        text-align: center;
         padding: 10px;
-        max-width: 75px;
     }
 
     .label {

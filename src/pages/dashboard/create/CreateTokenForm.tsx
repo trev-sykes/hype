@@ -193,119 +193,141 @@ const CreateTokenForm = () => {
     return (
         <div className={styles.container}>
             {!successPage ? (
-                <form className={styles.form} onSubmit={onSubmit}>
-                    <div className={styles.formHeader}>
-                        <h2>Create Your Coin</h2>
-                        <Logo background={true} size={'10rem'} />
-                    </div>
-                    {!isOnline && (
-                        <div className={styles.offlineContainer}>
-                            <p>No Internet</p>
-                            <WifiOffIcon />
+                <>
+                    <form className={styles.form} onSubmit={onSubmit}>
+                        <div className={styles.formHeader}>
+                            <h2>Create Your Coin</h2>
+                            <Logo background={true} size={'10rem'} />
                         </div>
-                    )}
-                    <label>
-                        Coin Name
-                        <input
-                            disabled={!isOnline}
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                            placeholder="My Amazing Coin"
-                        />
-                    </label>
-
-                    <label>
-                        Symbol
-                        <input
-                            disabled={!isOnline}
-                            type="text"
-                            value={symbol}
-                            onChange={(e) => setSymbol(e.target.value)}
-                            required
-                            placeholder="MAC"
-                        />
-                    </label>
-
-                    <label>
-                        Description
-                        <input
-                            disabled={!isOnline}
-                            type="text"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            required
-                            placeholder="Tell people what makes your coin special"
-                        />
-                    </label>
-                    <label htmlFor="photo">
-                        <div className={styles.imageContainer}>
+                        {!isOnline && (
+                            <div className={styles.offlineContainer}>
+                                <p>No Internet</p>
+                                <WifiOffIcon />
+                            </div>
+                        )}
+                        <label>
+                            Coin Name
                             <input
                                 disabled={!isOnline}
-                                ref={fileInputRef}
-                                type="file"
-                                onChange={handleFileChange}
-                                accept="image/*"
-                                className={styles.hiddenInput}
-                                id="photo"
+                                type="text"
+                                value={name}
+                                onChange={(e) => {
+                                    const newValue = e.target.value.replace(/\s/g, "");
+                                    if (newValue.length <= 20) {
+                                        setName(newValue);
+                                    }
+                                }}
+                                required
+                                placeholder="MyAmazingCoin"
                             />
-                            <div
-                                className={`${styles.dropZone} ${isDragging ? styles.dropZoneDragging : ''}`}
-                                onDragOver={handleDragOver}
-                                onDragLeave={handleDragLeave}
-                                onDrop={handleDrop}
-                            >
-                                {previewUrl ? (
-                                    <div className={styles.previewContainer}>
-                                        <img
-                                            src={previewUrl}
-                                            alt="Preview"
-                                            className={styles.previewImage}
-                                        />
-                                        <div className={styles.fileInfo}>
-                                            <p className={styles.fileName}>{imageFile && imageFile.name}</p>
+                        </label>
+
+                        <label>
+                            Symbol
+                            <input
+                                disabled={!isOnline}
+                                type="text"
+                                value={symbol}
+                                onChange={(e) => {
+                                    const newValue = e.target.value.replace(/\s/g, "");
+                                    if (newValue.length <= 7) {
+                                        setSymbol(newValue.toUpperCase());
+                                    }
+                                }}
+                                required
+                                placeholder="MAC"
+                            />
+                        </label>
+
+                        <label>
+                            Description
+                            <input
+                                disabled={!isOnline}
+                                type="text"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                required
+                                placeholder="Tell people what makes your coin special"
+                            />
+                        </label>
+                        <label htmlFor="photo">
+                            <div className={styles.imageContainer}>
+                                <input
+                                    disabled={!isOnline}
+                                    ref={fileInputRef}
+                                    type="file"
+                                    onChange={handleFileChange}
+                                    accept="image/*"
+                                    className={styles.hiddenInput}
+                                    id="photo"
+                                />
+                                <div
+                                    className={`${styles.dropZone} ${isDragging ? styles.dropZoneDragging : ''}`}
+                                    onDragOver={handleDragOver}
+                                    onDragLeave={handleDragLeave}
+                                    onDrop={handleDrop}
+                                >
+                                    {previewUrl ? (
+                                        <div className={styles.previewContainer}>
+                                            <img
+                                                src={previewUrl}
+                                                alt="Preview"
+                                                className={styles.previewImage}
+                                            />
+                                            <div className={styles.fileInfo}>
+                                                <p className={styles.fileName}>{imageFile && imageFile.name}</p>
+                                                <button
+                                                    disabled={!isOnline}
+                                                    type="button"
+                                                    onClick={() => fileInputRef.current?.click()}
+                                                >
+                                                    Change Image
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className={styles.textCenter}>
+                                            <p className="mb-2">Drag & drop image here</p>
+                                            <p>or</p>
                                             <button
                                                 disabled={!isOnline}
                                                 type="button"
                                                 onClick={() => fileInputRef.current?.click()}
+                                                className={styles.marginTop}
                                             >
-                                                Change Image
+                                                Browse Files
                                             </button>
                                         </div>
-                                    </div>
-                                ) : (
-                                    <div className={styles.textCenter}>
-                                        <p className="mb-2">Drag & drop image here</p>
-                                        <p>or</p>
-                                        <button
-                                            disabled={!isOnline}
-                                            type="button"
-                                            onClick={() => fileInputRef.current?.click()}
-                                            className={styles.marginTop}
-                                        >
-                                            Browse Files
-                                        </button>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    </label>
-                    <label>
-                        Starting Price
-                        <span>0.000001(automatically set for fairness)</span>
-                    </label>
+                        </label>
+                        <label>
+                            Starting Price
+                            <span>0.000001 (fair start)</span>
+                        </label>
 
-                    <label>
-                        Price Growth Rate
-                        <span>0.0000005(how much price increases per purchase)</span>
-                    </label>
+                        <label>
+                            Growth Rate
+                            <span>0.0000005 (per purchase)</span>
+                        </label>
 
-                    <button type="submit" disabled={isSubmitting || isPending || !isOnline || isTxLoading}>
-                        {isSubmitting || isPending ? "Deploying..." : "Deploy"}
-                    </button>
-                    {uploadError}
-                </form>
+                        <button type="submit" disabled={isSubmitting || isPending || !isOnline || isTxLoading}>
+                            {isSubmitting || isPending ? "Deploying..." : "Deploy"}
+                        </button>
+                        {uploadError}
+                    </form>
+                    <div className={styles.howItWorks}>
+                        <h3>How It Works</h3>
+                        <p>
+                            When you create a coin, it gets its own price curve and ETH reserve.
+                            Buyers mint coins by sending ETH — the more they buy, the higher the price climbs.
+                            Sellers can burn coins anytime to get ETH back based on the curve.
+                            Creators earn 0.5% of every mint.
+                        </p>
+                    </div>
+
+                </>
             ) : (
                 <div className={styles.successPage}>
                     <h2 className={styles.successTitle}>🎉 Your Coin is Live!</h2>

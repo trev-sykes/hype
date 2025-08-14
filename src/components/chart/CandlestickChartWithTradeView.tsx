@@ -5,6 +5,7 @@ import { useWidth } from '../../hooks/useWidth';
 import { useTradeStore } from '../../store/tradeStore';
 import { Link } from 'react-router-dom';
 import { parsePrice } from '../../utils/parsePrice';
+import { EtherSymbol } from 'ethers';
 
 interface Trade {
     tokenId: bigint;
@@ -220,9 +221,6 @@ export default function CandlestickChartWithTradeView({ coin, trades, interval =
 
                 chart.subscribeCrosshairMove((param: any) => {
                     const container = chartContainerRef.current!;
-                    const existingTooltips = container.querySelectorAll('.custom-tooltip');
-                    existingTooltips.forEach((tooltip) => tooltip.remove());
-
                     if (param.time && param.point && param.seriesPrices) {
                         const candlePrice = param.seriesPrices.get(candleSeries);
                         if (candlePrice) {
@@ -236,10 +234,10 @@ export default function CandlestickChartWithTradeView({ coin, trades, interval =
                             tooltip.style.zIndex = '1000';
                             tooltip.innerHTML = `
                                 Time: ${new Date(param.time * 1000).toLocaleString()}<br/>
-                                Price: ${candlePrice.close.toFixed(6)} ETH
+                                Price: ${candlePrice.close.toFixed(6)} ${EtherSymbol}
                             `;
                             container.appendChild(tooltip);
-                            tooltip.style.left = `${param.point.x + 10}px`;
+                            tooltip.style.left = `${param.point.x + - 10}px`;
                             tooltip.style.top = `${param.point.y + 10}px`;
                         }
                     }

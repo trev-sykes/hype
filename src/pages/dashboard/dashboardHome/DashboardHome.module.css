@@ -7,6 +7,7 @@
     align-items: flex-start;
     font-family: var(--font-text);
     animation: var(--animation-fade-in-up) var(--animation-duration) ease forwards;
+    padding: 1rem;
 }
 
 .header {
@@ -63,7 +64,7 @@
 }
 
 .section {
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
 }
 
 .sectionTitle {
@@ -200,4 +201,10 @@
     width: 12px;
     border-radius: 999px;
     background: linear-gradient(180deg, var(--color-neutral-800), var(--color-neutral-900));
+}
+
+@media (max-width: 700px) {
+    .pageContainer {
+        padding: .5rem;
+    }
 }

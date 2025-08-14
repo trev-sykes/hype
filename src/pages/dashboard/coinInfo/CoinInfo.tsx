@@ -11,6 +11,7 @@ import { useScrollDirection } from '../../../hooks/useScrollDirection';
 import { useTokenStore } from '../../../store/allTokensStore';
 import { fetchETHPrice } from "../../../api/fetchETHPrice"
 import { formatEther } from 'viem';
+import { EtherSymbol } from 'ethers';
 const valueOfTokens = (totalSupply: any, balance: any) => {
     const basePrice = 0.000001;
     const slope = 0.0000005;
@@ -78,6 +79,8 @@ export const CoinInfo: React.FC = () => {
     const totalSupply: any = coin.totalSupply ?? 0;
     const burnEthValue = valueOfTokens(totalSupply, balanceEth);
     const burnUsdValue = burnEthValue * ethPriceUSD;
+    const marketCapValueEth = valueOfTokens(totalSupply, totalSupply);
+    const marketCapValueUsd = marketCapValueEth * ethPriceUSD;
     if (!coin) {
         return (
             <div className={styles.loadingContainer}>
@@ -176,12 +179,14 @@ export const CoinInfo: React.FC = () => {
                                 <p className={styles.balanceAmount}>
                                     {balanceEth} {coin.symbol}
                                 </p>
-                                <p className={styles.ethValue}>
-                                    ≈ {burnEthValue?.toFixed(7)} ETH
-                                    {ethPriceUSD !== null && balanceEth !== undefined && (
-                                        <> (~${burnUsdValue.toFixed(2)})</>
-                                    )}
-                                </p>
+                                {balanceEth > 0 && (
+                                    <p className={styles.ethValue}>
+                                        ≈ {burnEthValue?.toFixed(7)} ETH
+                                        {ethPriceUSD !== null && balanceEth !== undefined && (
+                                            <> (~${burnUsdValue.toFixed(2)})</>
+                                        )}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -199,7 +204,7 @@ export const CoinInfo: React.FC = () => {
                             <div>
                                 <label>Current Price</label>
                                 <span>
-                                    {currentPriceEth.toFixed(6)} ETH
+                                    {currentPriceEth.toFixed(7)}{" "}{EtherSymbol}
                                     {currentPriceUSD !== null && (
                                         <> (~${currentPriceUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</>
                                     )}
@@ -208,9 +213,9 @@ export const CoinInfo: React.FC = () => {
                             <div>
                                 <label>Market Cap</label>
                                 <span>
-                                    {formatEther(coin.reserve)} ETH
+                                    {parseFloat(formatEther(coin.reserve)).toFixed(7)}{" "}{EtherSymbol}
                                     {marketCapUSD !== null && (
-                                        <> (~${marketCapUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</>
+                                        <> (~${marketCapValueUsd.toFixed(2)})</>
                                     )}
                                 </span>
                             </div>
