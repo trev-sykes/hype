@@ -9,6 +9,7 @@ import { ETHBackedTokenMinterAddress, ETHBackedTokenMinterABI } from '../../../s
 import { usePublicClient, useGasPrice, useAccount } from 'wagmi';
 import Logo from '../../../components/logo/Logo';
 import { encodeFunctionData } from 'viem';
+import { BarLoader } from 'react-spinners';
 
 const aboutLines = [
     ' ETH-backed tokens',
@@ -122,18 +123,18 @@ export const DashboardHome = ({ tokens, trades }: any) => {
             </header>
 
             <div className={styles.stats}>
-                {createGasCost || ethPrice ? (
+                {createGasCost && ethPrice ? (
                     <>
-                        <p>eth = <span className={styles.statItem}>${ethPrice ?? 'Loading...'}</span></p>
+                        <p>eth = <span className={styles.statItem}>${ethPrice}</span></p>
                         <p>
                             create ={' '}
                             <span className={styles.statItem}>
-                                {createGasCost ? `$${ethToUsd(createGasCost)}` : 'Loading...'}
+                                {`$${ethToUsd(createGasCost)}`}
                             </span>
                         </p>
                     </>
                 ) : (
-                    <Logo background={true} size={'3rem'} />
+                    <BarLoader />
                 )}
             </div>
 
