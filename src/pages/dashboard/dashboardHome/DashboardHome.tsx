@@ -122,13 +122,19 @@ export const DashboardHome = ({ tokens, trades }: any) => {
             </header>
 
             <div className={styles.stats}>
-                <p>eth = <span className={styles.statItem}>${ethPrice ?? 'Loading...'}</span></p>
-                <p>
-                    create ={' '}
-                    <span className={styles.statItem}>
-                        {createGasCost ? `$${ethToUsd(createGasCost)}` : 'Loading...'}
-                    </span>
-                </p>
+                {createGasCost || ethPrice ? (
+                    <>
+                        <p>eth = <span className={styles.statItem}>${ethPrice ?? 'Loading...'}</span></p>
+                        <p>
+                            create ={' '}
+                            <span className={styles.statItem}>
+                                {createGasCost ? `$${ethToUsd(createGasCost)}` : 'Loading...'}
+                            </span>
+                        </p>
+                    </>
+                ) : (
+                    <Logo background={true} size={'3rem'} />
+                )}
             </div>
 
 

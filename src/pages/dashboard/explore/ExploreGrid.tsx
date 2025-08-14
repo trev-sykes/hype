@@ -7,7 +7,6 @@ import { useWidth } from '../../../hooks/useWidth';
 import { TokenCard } from '../../../components/tokenCard/TokenCard';
 import type { Token } from '../../../types/token';
 import { ScrollToTopButton } from '../../../components/button/scrollToTop/ScrollToTopButton';
-import { useTokenStore } from '../../../store/allTokensStore';
 import { COOLDOWN_TIME, LAST_REFRESH_KEY } from '../../../constants';
 interface ExploreGridProps {
     tokens: any,
@@ -18,7 +17,6 @@ interface ExploreGridProps {
     fetchAllPrices?: any
 }
 export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage, hasNextPage, loading, fetchStaticMetadata }) => {
-    const { clearTokens } = useTokenStore();
     const isOnline = useOnline();
     const viewportWidth = useWidth();
     const [searchTerm, setSearchTerm] = useState('');
@@ -245,7 +243,6 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                         localStorage.setItem(LAST_REFRESH_KEY, now.toString());
                         setCooldownRemaining(Math.ceil(COOLDOWN_TIME / 1000 / 60));
                         setIsCooldownActive(true);
-                        clearTokens()
                         await fetchStaticMetadata("Manual Refresh");
                     }}
                 >
