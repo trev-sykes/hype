@@ -201,7 +201,7 @@ export const DashboardHome = ({ tokens, trades }: any) => {
                 <h3 className={styles.sectionTitle}>Stats:</h3>
                 <p>tvl ={' '}
                     <span className={styles.statItem}>
-                        {ethBalance !== null ? `${ethBalance} ${EtherSymbol} ($${ethBalanceUsd})` : 'Loading...'}
+                        {ethBalance !== null ? `${ethBalance} ${EtherSymbol} ($${ethBalanceUsd != null ? ethBalanceUsd : ''})` : 'Loading...'}
                     </span>
                 </p>
                 <p>coins ={' '}
