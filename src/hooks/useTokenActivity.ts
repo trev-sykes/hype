@@ -162,7 +162,7 @@ export function useAllTrades() {
 
 // --------------------------------------
 // Token activity memoized by tokenId
-export function useTokenActivity(tokenId: string) {
+export function useTokenActivity(tokenId: any) {
     const allTrades: any = useTradeStore(state => state.trades['all'] ?? []);
 
     // Memoized filtering to prevent unnecessary re-renders

@@ -30,7 +30,7 @@ export const TradePage: React.FC<TradePageProps> = ({ refetchBalance, tokenBalan
 
 
   // Convert coin?.tokenId to BigInt if it's a string
-  const tokenId = coin?.tokenId ? BigInt(coin.tokenId) : undefined;
+  const tokenId: any = coin?.tokenId ? BigInt(coin.tokenId) : undefined;
   const trades = useTokenActivity(coin?.tokenId?.toString());
 
   const mintEstimation = useMintEstimation(tokenId, ethInput);
