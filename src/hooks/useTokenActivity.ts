@@ -3,7 +3,6 @@ import { useTradeStore } from '../store/tradeStore';
 import request, { gql } from 'graphql-request';
 import { useQuery } from 'wagmi/query';
 import { deepEqual } from 'wagmi';
-import React from 'react';
 
 interface Trade {
     tokenId: string;
@@ -37,78 +36,28 @@ const ALL_TRADES_QUERY = gql`
   }
 }
 `;
+
 const TRADES_BY_TOKEN_QUERY = gql`
-  query Trades($tokenIds: [BigInt!]) {
-    burneds(where: { tokenId_in: $tokenIds }) {
-      id
-      seller
-      tokenId
-      amount
-      refund
-      blockTimestamp
-    }
-    minteds(where: { tokenId_in: $tokenIds }) {
-      id
-      buyer
-      tokenId
-      amount
-      cost
-      blockTimestamp
-    }
+query Trades($tokenIds: [BigInt!]) {
+  burneds(where: { tokenId_in: $tokenIds }) {
+    id
+    seller
+    tokenId
+    amount
+    refund
+    blockTimestamp
   }
-`;
-export function useTradesForTokens(tokenIds: string[]) {
-    const setTrades = useTradeStore((state) => state.setTrades);
-    const tradesByToken = useTradeStore((state) => state.trades);
-
-    // Only fetch if we don't already have trades for these tokens
-    const missingTokenIds = tokenIds.filter(id => !tradesByToken[id] || tradesByToken[id].length === 0);
-
-
-    const { data, isSuccess, error } = useQuery({
-        queryKey: ['token-trades', missingTokenIds.sort().join(',')],
-        queryFn: async () => {
-            const result = await request(url, TRADES_BY_TOKEN_QUERY, { tokenIds: missingTokenIds }, headers);
-            return result;
-        },
-        enabled: missingTokenIds.length > 0,
-        refetchOnWindowFocus: false,
-    });
-
-    const parsedTrades: Trade[] = useMemo(() => {
-        if (!data || !isSuccess) return [];
-        return parseTrades(data);
-    }, [data, isSuccess]);
-
-    useEffect(() => {
-        if (!parsedTrades.length && missingTokenIds.length === 0) return;
-
-        const groupedByToken: any = parsedTrades.reduce((acc, trade) => {
-            if (!acc[trade.tokenId]) acc[trade.tokenId] = [];
-            acc[trade.tokenId].push(trade);
-            return acc;
-        }, {} as Record<string, Trade[]>);
-
-        // Set trades for tokens with trades
-        for (const tokenId in groupedByToken) {
-            setTrades(tokenId, groupedByToken[tokenId]);
-        }
-
-        // Set empty trades array for tokens with no trades
-        missingTokenIds.forEach(tokenId => {
-            if (!groupedByToken[tokenId]) {
-                setTrades(tokenId, []);
-            }
-        });
-    }, [parsedTrades, setTrades, missingTokenIds]);
-    [parsedTrades, setTrades]
-
-    if (error) {
-        console.error('[useTradesForTokens] Error fetching trades:', error);
-    }
-
-    return tradesByToken;
+  minteds(where: { tokenId_in: $tokenIds }) {
+    id
+    buyer
+    tokenId
+    amount
+    cost
+    blockTimestamp
+  }
 }
+`;
+
 function parseTrades(data: any): Trade[] {
     const WEI_IN_ETH = 1e18;
 
@@ -141,50 +90,91 @@ function parseTrades(data: any): Trade[] {
     return [...mints, ...burns].sort((a, b) => a.timestamp - b.timestamp);
 }
 
+// --------------------------------------
+// Fetch trades for specific tokens
+export function useTradesForTokens(tokenIds: string[]) {
+    const setTrades = useTradeStore(state => state.setTrades);
+    const tradesByToken = useTradeStore(state => state.trades);
+
+    const missingTokenIds = tokenIds.filter(id => !tradesByToken[id] || tradesByToken[id].length === 0);
+
+    const { data, isSuccess, error } = useQuery({
+        queryKey: ['token-trades', missingTokenIds.sort().join(',')],
+        queryFn: async () => request(url, TRADES_BY_TOKEN_QUERY, { tokenIds: missingTokenIds }, headers),
+        enabled: missingTokenIds.length > 0,
+        refetchOnWindowFocus: false,
+    });
+
+    const parsedTrades: Trade[] = useMemo(() => (data && isSuccess ? parseTrades(data) : []), [data, isSuccess]);
+
+    useEffect(() => {
+        if (!parsedTrades.length && missingTokenIds.length === 0) return;
+
+        const groupedByToken: any = parsedTrades.reduce((acc, trade) => {
+            if (!acc[trade.tokenId]) acc[trade.tokenId] = [];
+            acc[trade.tokenId].push(trade);
+            return acc;
+        }, {} as Record<string, Trade[]>);
+
+        // Save trades to store
+        for (const tokenId in groupedByToken) {
+            setTrades(tokenId, groupedByToken[tokenId]);
+        }
+
+        // Save empty array for tokens with no trades
+        missingTokenIds.forEach(tokenId => {
+            if (!groupedByToken[tokenId]) setTrades(tokenId, []);
+        });
+    }, [parsedTrades, setTrades, missingTokenIds]);
+
+    if (error) console.error('[useTradesForTokens] Error fetching trades:', error);
+
+    return tradesByToken;
+}
+
+// --------------------------------------
+// Fetch all trades
 export function useAllTrades() {
-    const setTrades = useTradeStore((state) => state.setTrades);
-    const trades: any[] = useTradeStore((state) => state.trades['all'] ?? []);
+    const setTrades = useTradeStore(state => state.setTrades);
+    const trades: any = useTradeStore(state => state.trades['all'] ?? []);
     const hydrated = useTradeStore(state => state.hydrated);
-    const shouldFetch = !hydrated && !trades;
+    const shouldFetch = hydrated && !trades.length;
 
     const { data, isSuccess, error } = useQuery({
         queryKey: ['all-trades'],
-        queryFn: async () => {
-            const result = await request(url, ALL_TRADES_QUERY, {}, headers);
-            return result;
-        },
-        enabled: shouldFetch, // 👈 prevents query if trades already exist
-        refetchInterval: false,    // disable automatic polling
-        refetchOnWindowFocus: false, // disable on tab switch
+        queryFn: async () => request(url, ALL_TRADES_QUERY, {}, headers),
+        enabled: shouldFetch,
+        refetchInterval: false,
+        refetchOnWindowFocus: false,
     });
 
-    const parsedTrades: any = useMemo(() => {
-        if (!data || !isSuccess) return [];
-        return parseTrades(data);
-    }, [data, isSuccess]);
+    const parsedTrades: any = useMemo(() => (data && isSuccess ? parseTrades(data) : []), [data, isSuccess]);
+
     useEffect(() => {
         if (!parsedTrades.length) return;
+        if (!deepEqual(trades, parsedTrades)) setTrades('all', parsedTrades);
+    }, [parsedTrades, trades, setTrades]);
 
-        if (!deepEqual(trades, parsedTrades)) {
-            setTrades('all', parsedTrades);
-        }
-
-    }, [parsedTrades, trades]);
-
-
-
-    if (error) {
-        console.error('[useAllTrades] Error fetching all trades:', error);
-    }
+    if (error) console.error('[useAllTrades] Error fetching all trades:', error);
 
     return trades;
 }
-export function useTokenActivity(tokenId: any) {
-    const allTrades: any = useTradeStore(state => state.trades['all']) || [];
 
-    // memoize filtering by tokenId only if allTrades or tokenId changes
-    return React.useMemo(() => {
-        return allTrades.filter((trade: any) => trade.tokenId === tokenId);
-    }, [allTrades, tokenId]);
+// --------------------------------------
+// Token activity memoized by tokenId
+export function useTokenActivity(tokenId: string) {
+    const allTrades: any = useTradeStore(state => state.trades['all'] ?? []);
+
+    // Memoized filtering to prevent unnecessary re-renders
+    return useMemo(() => allTrades.filter((trade: any) => trade.tokenId === tokenId), [allTrades, tokenId]);
 }
 
+// --------------------------------------
+// Optional: simple price cache to avoid repeated Infura calls
+const priceCache: Record<string, number> = {};
+export async function getCachedPrice(tokenId: string, fetchPrice: (id: string) => Promise<number>) {
+    if (priceCache[tokenId] != null) return priceCache[tokenId];
+    const price = await fetchPrice(tokenId);
+    priceCache[tokenId] = price;
+    return price;
+}

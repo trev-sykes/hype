@@ -8,6 +8,7 @@ import { TokenCard } from '../../../components/tokenCard/TokenCard';
 import type { Token } from '../../../types/token';
 import { ScrollToTopButton } from '../../../components/button/scrollToTop/ScrollToTopButton';
 import { COOLDOWN_TIME, LAST_REFRESH_KEY } from '../../../constants';
+import { useAllTrades } from '../../../hooks/useTokenActivity';
 interface ExploreGridProps {
     tokens: any,
     fetchNextPage: any,
@@ -17,6 +18,7 @@ interface ExploreGridProps {
     fetchAllPrices?: any
 }
 export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage, hasNextPage, loading, fetchStaticMetadata }) => {
+    useAllTrades()
     const isOnline = useOnline();
     const viewportWidth = useWidth();
     const [searchTerm, setSearchTerm] = useState('');
@@ -196,8 +198,6 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                     <Logo background={true} size={viewportWidth > 500 ? '8rem' : '6rem'} />
                 </div>
             </div>
-
-
             <div className={styles.sortContainer}>
                 <div className={styles.sortWrapper}>
                     <label htmlFor="sort-select" className={styles.sortLabel}>Sort by:</label>
