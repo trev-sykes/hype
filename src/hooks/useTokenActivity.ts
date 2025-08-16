@@ -145,7 +145,7 @@ export function useAllTrades() {
     const setTrades = useTradeStore((state) => state.setTrades);
     const trades: any[] = useTradeStore((state) => state.trades['all'] ?? []);
     const hydrated = useTradeStore(state => state.hydrated);
-    const shouldFetch = hydrated && !trades;
+    const shouldFetch = !hydrated && !trades;
 
     const { data, isSuccess, error } = useQuery({
         queryKey: ['all-trades'],
