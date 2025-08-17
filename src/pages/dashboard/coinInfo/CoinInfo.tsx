@@ -12,6 +12,8 @@ import { useTokenStore } from '../../../store/allTokensStore';
 import { fetchETHPrice } from "../../../api/fetchETHPrice"
 import { formatEther } from 'viem';
 import { EtherSymbol } from 'ethers';
+import { useAccount } from 'wagmi';
+import { ConnectWallet } from '../../../components/wallet/ConnectWallet';
 const valueOfTokens = (totalSupply: any, balance: any) => {
     const basePrice = 0.000001;
     const slope = 0.0000005;
@@ -22,6 +24,8 @@ const valueOfTokens = (totalSupply: any, balance: any) => {
 }
 
 export const CoinInfo: React.FC = () => {
+    const { isConnected } = useAccount();
+    const [isConnectorOpen, setIsConnectorOpen] = useState(false);
     const { balanceEth } = useUserTokenBalance();
     const [imageLoaded, setImageLoaded] = useState<boolean | null>(null);
     const [activeTab, setActiveTab] = useState<'balance' | 'insights'>('balance');
@@ -125,123 +129,142 @@ export const CoinInfo: React.FC = () => {
             ? totalSupplyUpdated * currentPriceUSD
             : null;
     return (
-        <div className={styles.container}>
-            {isImageToggled && (
-                <div className={styles.fullScreen} onClick={handleImageToggle}>
-                    <div className={styles.circleWrapper}>
-                        <img
-                            src={coin.imageUrl}
-                            alt={coin.symbol}
-                            className={styles.fullScreenImage}
-                        />
-                    </div>
-                </div>
+        <>
+            {!isConnected && isConnectorOpen && (
+                <ConnectWallet handleIsHidden={setIsConnectorOpen} />
             )}
-            <BackButton />
-            <div className={styles.chartWrapper}>
-                <TransparentCandlestickChart coin={coin} trades={trades} interval={300} tokenId={coin.tokenId} />
-            </div>
+            <div className={styles.container}>
+                {isImageToggled && (
+                    <div className={styles.fullScreen} onClick={handleImageToggle}>
+                        <div className={styles.circleWrapper}>
+                            <img
+                                src={coin.imageUrl}
+                                alt={coin.symbol}
+                                className={styles.fullScreenImage}
+                            />
+                        </div>
+                    </div>
+                )}
+                <BackButton />
+                <div className={styles.chartWrapper}>
+                    <TransparentCandlestickChart coin={coin} trades={trades} interval={300} tokenId={coin.tokenId} />
+                </div>
 
-            <div className={styles.tabBar}>
-                <button
-                    className={`${styles.tab} ${activeTab === 'balance' ? styles.activeTab : ''}`}
-                    onClick={() => setActiveTab('balance')}
-                >
-                    Balance
-                </button>
-                <button
-                    className={`${styles.tab} ${activeTab === 'insights' ? styles.activeTab : ''}`}
-                    onClick={() => setActiveTab('insights')}
-                >
-                    Insights
-                </button>
-            </div>
+                <div className={styles.tabBar}>
+                    <button
+                        className={`${styles.tab} ${activeTab === 'balance' ? styles.activeTab : ''}`}
+                        onClick={() => setActiveTab('balance')}
+                    >
+                        Balance
+                    </button>
+                    <button
+                        className={`${styles.tab} ${activeTab === 'insights' ? styles.activeTab : ''}`}
+                        onClick={() => setActiveTab('insights')}
+                    >
+                        Insights
+                    </button>
+                </div>
 
-            <div className={styles.content}>
-                {activeTab === 'balance' && (
-                    <div className={styles.balanceTab}>
-                        <div className={styles.balanceRow}>
-                            {imageLoaded === null && <div className={styles.imagePlaceholder}></div>}
-                            {imageLoaded === false && (
-                                <div className={styles.imageFallback}>{coin.symbol}</div>
-                            )}
-                            <div className={`${styles.imageContainer}`}>
-                                <img
-                                    src={coin.imageUrl}
-                                    alt={coin.symbol}
-                                    className={`${styles.tokenImage} ${imageLoaded !== true ? styles.hidden : ''}`}
-                                    onLoad={() => setImageLoaded(true)}
-                                    onError={() => setImageLoaded(false)}
-                                    onClick={() => { handleImageToggle() }}
-                                />
-                            </div>
-                            <div className={styles.balanceInfo}>
-                                <p className={styles.balanceAmount}>
-                                    {balanceEth} {coin.symbol}
-                                </p>
-                                {balanceEth > 0 && (
-                                    <p className={styles.ethValue}>
-                                        ≈ {burnEthValue?.toFixed(7)} ETH
-                                        {ethPriceUSD !== null && balanceEth !== undefined && (
-                                            <> (~${burnUsdValue.toFixed(2)})</>
-                                        )}
-                                    </p>
+                <div className={styles.content}>
+                    {activeTab === 'balance' && (
+                        <div className={styles.balanceTab}>
+                            <div className={styles.balanceRow}>
+                                {imageLoaded === null && <div className={styles.imagePlaceholder}></div>}
+                                {imageLoaded === false && (
+                                    <div className={styles.imageFallback}>{coin.symbol}</div>
                                 )}
+                                <div className={`${styles.imageContainer}`}>
+                                    <img
+                                        src={coin.imageUrl}
+                                        alt={coin.symbol}
+                                        className={`${styles.tokenImage} ${imageLoaded !== true ? styles.hidden : ''}`}
+                                        onLoad={() => setImageLoaded(true)}
+                                        onError={() => setImageLoaded(false)}
+                                        onClick={() => { handleImageToggle() }}
+                                    />
+                                </div>
+                                <div className={styles.balanceInfo}>
+                                    <p className={styles.balanceAmount}>
+                                        {balanceEth} {coin.symbol}
+                                    </p>
+                                    {balanceEth > 0 && (
+                                        <p className={styles.ethValue}>
+                                            ≈ {burnEthValue?.toFixed(7)} ETH
+                                            {ethPriceUSD !== null && balanceEth !== undefined && (
+                                                <> (~${burnUsdValue.toFixed(2)})</>
+                                            )}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {activeTab === 'insights' && (
-                    <div className={styles.insightsTab}>
-                        <div className={styles.tokenHeader}>
-                            <div className={styles.tokenIdentity}>About {coin.name}</div>
-                            <div className={styles.tokenTitle}>Description</div>
-                            {coin.description && <p className={styles.description}>{coin.description}</p>}
+                    {activeTab === 'insights' && (
+                        <div className={styles.insightsTab}>
+                            <div className={styles.tokenHeader}>
+                                <div className={styles.tokenIdentity}>About {coin.name}</div>
+                                <div className={styles.tokenTitle}>Description</div>
+                                {coin.description && <p className={styles.description}>{coin.description}</p>}
+                            </div>
+                            <div className={styles.metaGrid}>
+                                <div className={styles.tokenIdentity}>Stats</div>
+                                <div>
+                                    <label>Current Price</label>
+                                    <span>
+                                        {currentPriceEth.toFixed(7)}{" "}{EtherSymbol}
+                                        {currentPriceUSD !== null && (
+                                            <> (~${currentPriceUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</>
+                                        )}
+                                    </span>
+                                </div>
+                                <div>
+                                    <label>Market Cap</label>
+                                    <span>
+                                        {parseFloat(formatEther(coin.reserve)).toFixed(7)}{" "}{EtherSymbol}
+                                        {marketCapUSD !== null && (
+                                            <> (~${marketCapValueUsd.toFixed(2)})</>
+                                        )}
+                                    </span>
+                                </div>
+                                <div>
+                                    <label>Total Supply</label>
+                                    <span>{totalSupplyUpdated.toLocaleString()}</span>
+                                </div>
+                            </div>
                         </div>
-                        <div className={styles.metaGrid}>
-                            <div className={styles.tokenIdentity}>Stats</div>
-                            <div>
-                                <label>Current Price</label>
-                                <span>
-                                    {currentPriceEth.toFixed(7)}{" "}{EtherSymbol}
-                                    {currentPriceUSD !== null && (
-                                        <> (~${currentPriceUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</>
-                                    )}
-                                </span>
-                            </div>
-                            <div>
-                                <label>Market Cap</label>
-                                <span>
-                                    {parseFloat(formatEther(coin.reserve)).toFixed(7)}{" "}{EtherSymbol}
-                                    {marketCapUSD !== null && (
-                                        <> (~${marketCapValueUsd.toFixed(2)})</>
-                                    )}
-                                </span>
-                            </div>
-                            <div>
-                                <label>Total Supply</label>
-                                <span>{totalSupplyUpdated.toLocaleString()}</span>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                    )}
+                </div>
+                <div className={styles.ctaWrapper}>
+                    {!isConnected ? (
+                        <>
+                            <button
+                                className={`${styles.tradeButton} ${!showCTA ? styles.ctaHidden : ''}`}
+                                style={{ cursor: 'default' }}
+                                onClick={() => setIsConnectorOpen(prev => !prev)}
+                            >
+                                Sign In</button>
+                        </>
+                    ) : (
+                        <>
+                            <Link
+                                to={`/trade/${coin.tokenId}`}
+                                className={`${styles.tradeButton} ${!showCTA ? styles.ctaHidden : ''}`}
+                            >
+                                Buy & Sell
+                            </Link>
+                            <Link
+                                to={`/explore/${coin.tokenId}/trade`}
+                                className={`${styles.tradeButton} ${!showCTA ? styles.ctaHidden : ''}`}
+                            >
+                                Trade
+                            </Link>
+                        </>
+
+                    )}
+                </div>
+                <div ref={bottomRef} style={{ height: '1px' }} />
             </div>
-            <div className={styles.ctaWrapper}>
-                <Link
-                    to={`/trade/${coin.tokenId}`}
-                    className={`${styles.tradeButton} ${!showCTA ? styles.ctaHidden : ''}`}
-                >
-                    Buy & Sell
-                </Link>
-                <Link
-                    to={`/explore/${coin.tokenId}/trade`}
-                    className={`${styles.tradeButton} ${!showCTA ? styles.ctaHidden : ''}`}
-                >
-                    Trade
-                </Link>
-            </div>
-            <div ref={bottomRef} style={{ height: '1px' }} />
-        </div>
+        </>
     );
 };

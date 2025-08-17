@@ -12,7 +12,7 @@ import Logo from '../../../components/logo/Logo'
 
 const CreateTokenForm = () => {
     const isOnline = useOnline();
-    const { address } = useAccount()
+    const { address, isConnected } = useAccount()
     const [name, setName] = useState("");
     const [symbol, setSymbol] = useState("");
     const [description, setDescription] = useState("");
@@ -312,8 +312,8 @@ const CreateTokenForm = () => {
                             <span>0.0000005 (per purchase)</span>
                         </label>
 
-                        <button type="submit" disabled={isSubmitting || isPending || !isOnline || isTxLoading}>
-                            {isSubmitting || isPending ? "Deploying..." : "Deploy"}
+                        <button type="submit" disabled={isSubmitting || isPending || !isOnline || isTxLoading || !isConnected}>
+                            {isSubmitting || isPending ? "Deploying..." : !isConnected ? "Sign In" : "Deploy"}
                         </button>
                         {uploadError}
                     </form>

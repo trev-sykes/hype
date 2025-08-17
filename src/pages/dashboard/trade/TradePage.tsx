@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { parseEther, formatEther } from 'viem';
-import { useReadContract, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
+import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { ERC6909ABI, ERC6909Address } from '../../../services/ERC6909Metadata';
 import { ETHBackedTokenMinterABI, ETHBackedTokenMinterAddress } from '../../../services/ETHBackedTokenMinter';
 import styles from './TradePage.module.css';
@@ -12,6 +12,7 @@ import { useBurnEstimation, useMintEstimation } from '../../../hooks/useTradeEst
 import { useAlertStore, type ActionType } from '../../../store/alertStore';
 import { BackButton } from '../../../components/button/back/BackButton';
 import { TradeHistoryTable } from './TradeHistoryTable';
+import { ConnectWallet } from '../../../components/wallet/ConnectWallet';
 interface TradePageProps {
   refetchBalance: any;
   tokenBalance: any;
@@ -19,6 +20,8 @@ interface TradePageProps {
   balance: any;
 }
 export const TradePage: React.FC<TradePageProps> = ({ refetchBalance, tokenBalance, address, balance }) => {
+  const account = useAccount();
+  const [isConnectorOpen, setIsConnectorOpen] = useState(false);
   const { coin } = useCoinStore();
   const { setAlert } = useAlertStore();
   const [ethInput, setEthInput] = useState('');
@@ -152,6 +155,18 @@ export const TradePage: React.FC<TradePageProps> = ({ refetchBalance, tokenBalan
   };
   return (
     <>
+      {!account.isConnected && isConnectorOpen && (
+        <ConnectWallet handleIsHidden={setIsConnectorOpen} />
+      )}
+      {/* Login overlay */}
+      {!account.isConnected && (
+        <div className={styles.loginOverlay}>
+          <div className={styles.loginPrompt}>
+            <p>Please log in to trade.</p>
+            <button onClick={() => setIsConnectorOpen(prev => !prev)}>Sign In</button>
+          </div>
+        </div>
+      )}
       <div className={styles.container}>
         <div className={styles.left}>
           <div className={styles.cContainer}>
