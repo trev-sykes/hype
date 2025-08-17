@@ -10,7 +10,7 @@ import { ConnectWallet } from '../../components/wallet/ConnectWallet';
 import { useEnforceChain } from '../../hooks/useForceChainId';
 
 const DashboardLayout = () => {
-    const [isConnectorOpen, setIsConnectorOpen] = useState(true);
+    const [isConnectorOpen, setIsConnectorOpen] = useState(false);
     const isOnline = useOnline();
     const account = useAccount();
     useEnforceChain(1);

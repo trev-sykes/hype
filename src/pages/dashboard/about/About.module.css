@@ -67,3 +67,28 @@
     color: var(--color-neutral-800);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+/* Links container */
+.links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+}
+
+/* Individual links */
+.links a {
+    text-decoration: none;
+    color: var(--color-neutral-900);
+    background-color: var(--color-neutral-200);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.links a:hover {
+    background-color: var(--color-neutral-300);
+    transform: translateY(-2px);
+}
