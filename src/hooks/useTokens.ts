@@ -95,8 +95,6 @@ export function useTokens(tokenId?: string) {
                             const current = parseFloat(price?.toString() || '0');
                             const percentChange = base > 0 ? ((current - base) / base) * 100 : null;
                             updateToken(token.tokenId.toString(), {
-                                basePrice: meta.basePrice?.toString(),
-                                slope: meta.slope?.toString(),
                                 reserve: meta.reserve?.toString(),
                                 totalSupply: meta.totalSupply?.toString(),
                                 price: price?.toString(),
@@ -160,8 +158,6 @@ export function useTokens(tokenId?: string) {
                 updateToken(tokenId, {
                     reserve: meta.reserve?.toString(),
                     totalSupply: meta.totalSupply?.toString(),
-                    basePrice: meta.basePrice?.toString(),
-                    slope: meta.slope?.toString(),
                     price: price?.toString(),
                     percentChange,
                     priceLastFetchedAt: Date.now(),
