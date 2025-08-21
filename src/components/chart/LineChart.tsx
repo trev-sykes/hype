@@ -211,7 +211,12 @@ export default function LineChart({
 
                 const allTimeData = trades
                     .filter((trade) => isFinite(trade.price))
-                    .map((trade) => ({ time: trade.timestamp, value: trade.price }));
+                    .map((trade) => {
+                        let ts = Number(trade.timestamp);
+                        // if timestamp is in milliseconds (> 1e12), convert to seconds
+                        if (ts > 1e12) ts = Math.floor(ts / 1000);
+                        return { time: ts, value: trade.price };
+                    });
 
                 let processedData: any = processDataForChart(allTimeData);
 
