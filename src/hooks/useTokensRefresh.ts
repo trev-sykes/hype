@@ -46,7 +46,7 @@ export function useTokensRefresh(tokenId?: string) {
 
         isFetchingRef.current = true;
         setLoading(true);
-
+        console.log("[Store snapshot]", tokens);
         try {
             const tokenIds = await fetchTokenIds();
 
@@ -54,11 +54,9 @@ export function useTokensRefresh(tokenId?: string) {
 
             const formattedTokens = await Promise.all(
                 rawMetadata.map(async (token: any) => {
-                    const basePrice = toStringOrNull(token.basePrice);
-                    const slope = toStringOrNull(token.slope);
                     const totalSupply = toStringOrNull(token.totalSupply);
 
-                    const price = calculateTokenPrice(token.basePrice?.toString(), slope, totalSupply);
+                    const price = calculateTokenPrice(totalSupply);
                     let imageUrl = token.image ? convertToIpfsUrl(token.image) : null;
 
                     // If no image URL from token.image, try fetching from URI metadata JSON
@@ -74,8 +72,6 @@ export function useTokensRefresh(tokenId?: string) {
                         uri: token.uri ?? null,
                         description: token.description ?? null,
                         imageUrl,
-                        basePrice,
-                        slope,
                         reserve: toStringOrNull(token.reserve),
                         totalSupply,
                         price,

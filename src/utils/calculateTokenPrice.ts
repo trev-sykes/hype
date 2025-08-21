@@ -1,13 +1,14 @@
-export function calculateTokenPrice(basePrice: string | null | undefined, slope: string | null | undefined, totalSupply: string | null | undefined): number | null {
+import { BASE_PRICE, SLOPE } from "../constants";
+export function calculateTokenPrice(totalSupply: string | null | undefined): number | null {
     try {
-        if (!basePrice || !slope || !totalSupply) {
-            console.warn("calculateTokenPrice: Missing input(s)", { basePrice, slope, totalSupply });
+        if (!totalSupply) {
+            console.warn("calculateTokenPrice: Missing input(s)", { totalSupply });
             return null;
         }
 
         // Validate that inputs can be converted to BigInt safely
-        const base = BigInt(basePrice);
-        const slopePerToken = BigInt(slope);
+        const base = BigInt(BASE_PRICE);
+        const slopePerToken = BigInt(SLOPE);
         const supply = BigInt(totalSupply);
 
         const priceWei = base + slopePerToken * supply;
@@ -15,7 +16,7 @@ export function calculateTokenPrice(basePrice: string | null | undefined, slope:
 
         return priceEth;
     } catch (error) {
-        console.warn("calculateTokenPrice: Error converting to BigInt or calculating price", error, { basePrice, slope, totalSupply });
+        console.warn("calculateTokenPrice: Error converting to BigInt or calculating price", error, { BASE_PRICE, SLOPE, totalSupply });
         return null;
     }
 }

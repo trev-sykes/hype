@@ -33,7 +33,7 @@ export const TradeHistoryTable: React.FC<TradeHistoryTableProps> = ({ coin }) =>
                                         <td className={`${trade.type === 'mint' ? styles.mint : styles.burn}`}>{trade.type === 'mint' ? 'BUY' : 'SELL'}</td>
                                         <td className={`${trade.type === 'mint' ? styles.mint : styles.burn}`}>{trade.amount?.toString?.() ?? '-'}</td>
                                         <td>{formatEth(trade.cost)}</td>
-                                        <td className={`${trade.type === 'mint' ? styles.mint : styles.burn}`}>{Number(trade.price).toFixed(4)}</td>
+                                        <td className={`${trade.type === 'mint' ? styles.mint : styles.burn}`}>{Number(trade.price).toFixed(7)}</td>
                                         <td>{timeAgo(trade.timestamp)}</td>
                                     </tr>
                                 ))}

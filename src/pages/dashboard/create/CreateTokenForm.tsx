@@ -16,8 +16,6 @@ const CreateTokenForm = () => {
     const [name, setName] = useState("");
     const [symbol, setSymbol] = useState("");
     const [description, setDescription] = useState("");
-    const [basePrice] = useState("0.001");
-    const [slope] = useState("0.0001");
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -152,7 +150,7 @@ const CreateTokenForm = () => {
         if (!address || !imageBuffer) {
             return;
         }
-        if (name && symbol && description && basePrice && slope && imageFile) {
+        if (name && symbol && description && imageFile) {
             try {
                 const fileName = `${name}_logo.png`;
                 const pinataMetadata = { name: fileName };

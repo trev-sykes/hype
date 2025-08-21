@@ -10,6 +10,7 @@ import { ScrollToTopButton } from '../../../components/button/scrollToTop/Scroll
 import { COOLDOWN_TIME, LAST_REFRESH_KEY } from '../../../constants';
 import { useAllTrades } from '../../../hooks/useTokenActivity';
 import { useTradeStore } from '../../../store/tradeStore';
+import { calculatePriceChange } from '../../../utils/twentyFourHourChange';
 interface ExploreGridProps {
     tokens: any,
     fetchNextPage: any,
@@ -19,10 +20,11 @@ interface ExploreGridProps {
     fetchAllPrices?: any
 }
 export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage, hasNextPage, loading, fetchStaticMetadata }) => {
-    useAllTrades()
+    const trades = useAllTrades()
     const { clearTrades } = useTradeStore()
     const isOnline = useOnline();
     const viewportWidth = useWidth();
+    const [trending, setTrending] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [isSearching, setIsSearching] = useState(false);
     const [filteredCoins, setFilteredCoins] = useState<any[]>([]);
@@ -33,6 +35,23 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
     const inputRef = useRef<HTMLInputElement | null>(null);
     const tokenRefs = useRef<Map<string, HTMLDivElement | null>>(new Map());
     const [now, setNow] = useState(Date.now());
+    useEffect(() => {
+        if (!trades || !tokens) return;
+
+        const trendingCoins = tokens
+            .map((token: any) => {
+                const tokenId = token.tokenId;
+                const change7d = calculatePriceChange(trades, tokenId, 24 * 7) ?? 0;
+                return { ...token, change7d };
+            })
+            .filter((t: any) => t.change7d > 0) // only positive gainers
+            .sort((a: any, b: any) => b.change7d - a.change7d) // top gainers first
+            .slice(0, 5); // pick top 5 trending coins
+
+        console.log("🔥 Top 7-day trending coins:", trendingCoins);
+        setTrending(trendingCoins);
+    }, [tokens, trades]);
+
     useEffect(() => {
         now;
         const interval = setInterval(() => {
@@ -275,6 +294,23 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                     </div>
                 ) : coinsToDisplay.length > 0 && !loading ? (
                     <>
+                        {trending.length > 0 && (
+                            <div className={styles.trendingSection}>
+                                <h3>🔥 Trending This Week</h3>
+                                <div className={styles.trendingGrid}>
+                                    {trending.map(coin => (
+                                        <div key={coin.tokenId} className={styles.trendingCard}>
+                                            <img src={coin.imageUrl} alt={coin.name} className={styles.trendingImage} />
+                                            <div className={styles.trendingInfo}>
+                                                <span>{coin.symbol}</span>
+                                                <span className={styles.trendingChange}>+{coin.change7d.toFixed(1)}%</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         <div className={styles.gridContainer}>
                             {sortedCoins.map((coin: Token) => (
                                 <div

@@ -9,8 +9,6 @@ export type Token = {
 
     // Enrichable fields
     price?: bigint | string | number | null;
-    basePrice?: bigint | null;
-    slope?: bigint | null;
     reserve?: bigint | null;
     totalSupply?: bigint | null;
     percentChange?: number | null;

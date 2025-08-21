@@ -2,6 +2,8 @@ import { throttledFetchIpfsMetadata } from "../lib/metadata/throttledFetchIpfsMe
 import { calculateTokenPrice } from "./calculateTokenPrice";
 import { convertToIpfsUrl } from "./ipfs";
 import { throttledFetchPrice } from "../lib/pricing/throttledFetchAllPrices";
+import { BASE_PRICE } from "../constants";
+import { formatEther } from "viem";
 
 // Cache of tokens that failed enrichment
 const failedTokens = new Set<string>();
@@ -40,11 +42,9 @@ export const enrichTokens = async (
                         : null;
 
                     let calculatedPrice = null;
-                    if (onChain.basePrice && onChain.slope && onChain.totalSupply) {
+                    if (onChain.totalSupply) {
                         try {
                             calculatedPrice = calculateTokenPrice(
-                                onChain.basePrice.toString(),
-                                onChain.slope.toString(),
                                 onChain.totalSupply.toString()
                             );
                         } catch (e) {
@@ -59,9 +59,18 @@ export const enrichTokens = async (
                         console.warn(`⚠️ Failed to fetch live price for ${tokenIdStr}`, err);
                     }
 
-                    const base = parseFloat(onChain.basePrice?.toString() || '0');
                     const current = parseFloat(fetchedPrice?.toString() || calculatedPrice?.toString() || '0');
+                    const fetchedPriceEth = fetchedPrice ? Number(formatEther(fetchedPrice)) : null;
+                    const finalPrice = calculatedPrice ?? fetchedPriceEth;
+                    const base = Number(BASE_PRICE);
                     const percentChange = base > 0 ? ((current - base) / base) * 100 : null;
+                    console.log("[enrichTokens] token final object", tokenIdStr, {
+                        totalSupply: onChain.totalSupply?.toString(),
+                        calculatedPrice,
+                        finalPrice,
+                        percentChange
+                    });
+
                     return {
                         tokenId: token.tokenId,
                         name: token.name,
@@ -70,11 +79,9 @@ export const enrichTokens = async (
                         uri: onChain.uri ?? null,
                         description: ipfsData?.description ?? null,
                         imageUrl: ipfsData?.image ? convertToIpfsUrl(ipfsData.image) : null,
-                        basePrice: onChain.basePrice?.toString() ?? null,
-                        slope: onChain.slope?.toString() ?? null,
                         reserve: onChain.reserve?.toString() ?? null,
                         totalSupply: onChain.totalSupply?.toString() ?? null,
-                        price: current?.toString() ?? null,
+                        price: finalPrice ?? null,
                         percentChange,
                         priceLastFetchedAt: Date.now(),
                         needsPriceUpdate: false,
@@ -103,6 +110,7 @@ export const enrichTokens = async (
                 updated.push(newToken);
             }
         });
+
         setTokens(updated);
         return filtered;
     } catch (error: any) {

@@ -5,8 +5,6 @@ export function sanitizeTokenForStorage(token: Token): Record<string, any> {
 
     const bigintKeys: (keyof Token)[] = [
         'tokenId',
-        'basePrice',
-        'slope',
         'reserve',
         'totalSupply',
     ];

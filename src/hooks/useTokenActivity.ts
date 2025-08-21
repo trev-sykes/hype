@@ -69,7 +69,7 @@ function parseTrades(data: any): Trade[] {
             amount: BigInt(m.amount).toString(),
             cost: BigInt(cost).toString(),
             price: (cost / WEI_IN_ETH) / amount,
-            timestamp: Number(m.blockTimestamp ?? 0),
+            timestamp: m.blockTimestamp ?? 0,
             type: 'mint',
         };
     });
@@ -82,7 +82,7 @@ function parseTrades(data: any): Trade[] {
             amount: BigInt(b.amount).toString(),
             cost: BigInt(refund).toString(),
             price: (refund / WEI_IN_ETH) / amount,
-            timestamp: Number(b.blockTimestamp ?? 0),
+            timestamp: b.blockTimestamp ?? 0,
             type: 'burn',
         };
     });

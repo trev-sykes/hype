@@ -566,3 +566,40 @@
         height: 1rem;
     }
 }
+
+.trendingSection {
+    margin-bottom: 2rem;
+}
+
+.trendingGrid {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+}
+
+.trendingCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f0f4f8;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    min-width: 80px;
+}
+
+.trendingImage {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.trendingInfo {
+    margin-top: 0.5rem;
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+.trendingChange {
+    color: green;
+    font-weight: bold;
+}
