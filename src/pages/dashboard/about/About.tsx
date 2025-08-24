@@ -1,5 +1,6 @@
 import styles from './About.module.css';
 import Logo from '../../../components/logo/Logo';
+import { ETHBackedTokenMinterAddress } from '../../../services/ETHBackedTokenMinter';
 
 const features = [
     "Bonding Curve Pricing",
@@ -30,7 +31,7 @@ const About = () => {
                 </div>
 
                 <div className={styles.links}>
-                    <a href="https://etherscan.io/address/0xcDAd81928F637B10f97250B641fC7DFB687A3b32" target="_blank" rel="noopener noreferrer">
+                    <a href={`https://etherscan.io/address/${ETHBackedTokenMinterAddress}`} target="_blank" rel="noopener noreferrer">
                         View Smart Contract
                     </a>
                     <a href="https://twitter.com/@hypeiteth" target="_blank" rel="noopener noreferrer">
@@ -38,7 +39,7 @@ const About = () => {
                     </a>
                 </div>
             </div>
-        </main>
+        </main >
     );
 };
 

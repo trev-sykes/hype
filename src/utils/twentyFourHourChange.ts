@@ -13,7 +13,7 @@ export function calculatePriceChange(trades: Trade[], tokenId: string, periodHou
     console.log(`[calculatePriceChange] now: ${now}, cutoff (${periodHours}h ago): ${cutoff}`);
 
     // Find the last trade before cutoff
-    const oldTrade = [...tokenTrades].reverse().find(t => Number(t.timestamp) <= cutoff);
+    const oldTrade = [...tokenTrades].reverse().find(t => Number(t.timestamp) <= cutoff) || tokenTrades[0];
     console.log(`[calculatePriceChange] oldTrade (before cutoff):`, oldTrade);
 
     // Most recent trade

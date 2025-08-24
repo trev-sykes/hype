@@ -25,7 +25,6 @@ const CreateTokenForm = () => {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
     const [uploadError, setUploadError] = useState<string | null>(null);
     const { setAlert } = useAlertStore();
-
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -210,7 +209,9 @@ const CreateTokenForm = () => {
                                 type="text"
                                 value={name}
                                 onChange={(e) => {
-                                    const newValue = e.target.value.replace(/\s/g, "");
+                                    let newValue = e.target.value;
+                                    // Replace multiple consecutive spaces with a single space
+                                    newValue = newValue.replace(/ {2,}/g, " ");
                                     if (newValue.length <= 20) {
                                         setName(newValue);
                                     }

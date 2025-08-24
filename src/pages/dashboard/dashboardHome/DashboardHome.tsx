@@ -131,7 +131,7 @@ export const DashboardHome = ({ tokens, trades }: any) => {
         <div className={styles.pageContainer}>
             <header className={styles.header}>
                 <h1 className={styles.title}>Hype<span><Logo background={true} size={'4rem'} /></span></h1>
-                <p className={styles.subtitle}>Bonding Curve Marketplace</p>
+                <p className={styles.subtitle}>Token Marketplace</p>
                 <div className={styles.aboutText}>
                     {aboutLines.map((line, index) => (
                         <p key={index} className={styles.aboutLine} style={{ animationDelay: `${index * 0.7}s` }}>

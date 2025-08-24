@@ -540,8 +540,15 @@
     margin-bottom: 2rem;
 }
 
-/* Basic tab button style */
 .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+/* Basic tab button style */
+.tabButton {
     padding: 10px 24px;
     background-color: transparent;
     border: none;
@@ -555,7 +562,7 @@
 }
 
 /* Hover effect */
-.tab:hover:not(.activeTab) {
+.tabButton:hover:not(.activeTab) {
     color: var(--color-neutral-500);
 }
 
@@ -565,7 +572,12 @@
     cursor: default;
 }
 
-
+.underscore {
+    width: 75%;
+    height: 2px;
+    background: transparent;
+    text-align: center;
+}
 
 .balanceTab {
     /* Optional container styling */

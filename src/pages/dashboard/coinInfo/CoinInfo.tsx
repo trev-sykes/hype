@@ -39,6 +39,7 @@ export const CoinInfo: React.FC = () => {
     const trades = useTokenActivity(tokenId);
     const bottomRef = useRef<HTMLDivElement | null>(null);
     const isScrollingUp = useScrollDirection();
+
     useEffect(() => {
         async function getEthPrice() {
             try {
@@ -151,18 +152,30 @@ export const CoinInfo: React.FC = () => {
                 </div>
 
                 <div className={styles.tabBar}>
-                    <button
-                        className={`${styles.tab} ${activeTab === 'balance' ? styles.activeTab : ''}`}
-                        onClick={() => setActiveTab('balance')}
-                    >
-                        Balance
-                    </button>
-                    <button
-                        className={`${styles.tab} ${activeTab === 'insights' ? styles.activeTab : ''}`}
-                        onClick={() => setActiveTab('insights')}
-                    >
-                        Insights
-                    </button>
+                    <div className={styles.tab}>
+                        <button
+                            className={`${styles.tabButton} ${activeTab === 'balance' ? styles.activeTab : ''}`}
+                            onClick={() => setActiveTab('balance')}
+                        >
+                            Balance
+                        </button>
+                        <div
+                            className={styles.underscore}
+                            style={{ background: `${activeTab == 'balance' ? coin.dominantColor : ''}` }}
+                        />
+                    </div>
+                    <div className={styles.tab}>
+                        <button
+                            className={`${styles.tabButton} ${activeTab === 'insights' ? styles.activeTab : ''}`}
+                            onClick={() => setActiveTab('insights')}
+                        >
+                            Insights
+                        </button>
+                        <div
+                            className={styles.underscore}
+                            style={{ background: `${activeTab == 'insights' ? coin.dominantColor : ''}` }}
+                        />
+                    </div>
                 </div>
 
                 <div className={styles.content}>

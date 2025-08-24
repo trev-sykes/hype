@@ -623,6 +623,7 @@ export default function LineChart({
                                 key={option.value}
                                 className={`${styles.intervalButton} ${selectedInterval === option.value ? styles.active : ''}`}
                                 onClick={() => setSelectedInterval(option.value)}
+                                style={{ color: coin.dominantColor, }}
                             >
                                 {option.label}
                             </button>
