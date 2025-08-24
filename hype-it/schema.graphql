@@ -1,0 +1,45 @@
+type Burned @entity(immutable: true) {
+  id: Bytes!
+  seller: Bytes! # address
+  tokenId: BigInt! # uint256
+  amount: BigInt! # uint256
+  refund: BigInt! # uint256
+  newReserve: BigInt! # uint256
+  newTotalSupply: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Minted @entity(immutable: true) {
+  id: Bytes!
+  buyer: Bytes! # address
+  tokenId: BigInt! # uint256
+  amount: BigInt! # uint256
+  cost: BigInt! # uint256
+  newReserve: BigInt! # uint256
+  newTotalSupply: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ProtocolFeeRecipientChanged @entity(immutable: true) {
+  id: Bytes!
+  oldRecipient: Bytes! # address
+  newRecipient: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TokenCreated @entity(immutable: true) {
+  id: Bytes!
+  tokenId: BigInt! # uint256
+  name: String! # string
+  symbol: String! # string
+  creator: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

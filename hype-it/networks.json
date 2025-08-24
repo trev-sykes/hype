@@ -1,0 +1,8 @@
+{
+  "mainnet": {
+    "ETHBackedTokenMinter": {
+      "address": "0xBEBaa390d5c6821f6191EC8F1f4817C2FF16Bc7d",
+      "startBlock": 23212581
+    }
+  }
+}
