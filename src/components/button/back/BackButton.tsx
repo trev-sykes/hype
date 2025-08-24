@@ -20,7 +20,7 @@ export const BackButton: React.FC = () => {
         if (canGoBack) {
             navigate(-1);
         } else {
-            navigate("/dashboard/"); // fallback route (e.g., home page)
+            navigate("/"); // fallback route (e.g., home page)
         }
     };
 
