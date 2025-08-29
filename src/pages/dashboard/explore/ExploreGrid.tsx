@@ -264,7 +264,7 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                         localStorage.setItem(LAST_REFRESH_KEY, now.toString());
                         setCooldownRemaining(Math.ceil(COOLDOWN_TIME / 1000 / 60));
                         setIsCooldownActive(true);
-                        clearTrades()
+                        clearTrades();
                         await fetchStaticMetadata("Manual Refresh");
                     }}
                 >

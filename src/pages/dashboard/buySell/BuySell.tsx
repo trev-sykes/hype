@@ -36,6 +36,7 @@ export const BuySell: React.FC<Props> = ({ balance, fetchStaticMetadata }) => {
     const [estimate, setEstimate] = useState('0');
     const [maxValue, setMaxValue] = useState();
     const [restrict, setRestrict] = useState(false);
+
     const amountRef = useRef<any>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [scale, setScale] = useState(1);
@@ -49,7 +50,6 @@ export const BuySell: React.FC<Props> = ({ balance, fetchStaticMetadata }) => {
         functionName: 'isOperator',
         args: [address, ETHBackedTokenMinterAddress],
     });
-
     const {
         data: hash,
         writeContract,
@@ -58,7 +58,6 @@ export const BuySell: React.FC<Props> = ({ balance, fetchStaticMetadata }) => {
     } = useWriteContract();
 
     const { isLoading: isTxLoading, isSuccess: isTxSuccess } = useWaitForTransactionReceipt({ hash });
-
     useEffect(() => {
         if (isTxLoading) {
             setAlert({
@@ -281,7 +280,6 @@ export const BuySell: React.FC<Props> = ({ balance, fetchStaticMetadata }) => {
             setRestrict(restrict)
         }
     }, [mode, currency]);
-
     return (
         <>
             <div className={styles.tradePage}>
