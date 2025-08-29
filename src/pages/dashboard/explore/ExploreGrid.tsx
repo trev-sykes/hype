@@ -11,6 +11,7 @@ import { COOLDOWN_TIME, LAST_REFRESH_KEY } from '../../../constants';
 import { useAllTrades } from '../../../hooks/useTokenActivity';
 import { useTradeStore } from '../../../store/tradeStore';
 import { calculatePriceChange } from '../../../utils/twentyFourHourChange';
+import { useTokenStore } from '../../../store/allTokensStore';
 interface ExploreGridProps {
     tokens: any,
     fetchNextPage: any,
@@ -21,6 +22,7 @@ interface ExploreGridProps {
 }
 export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage, hasNextPage, loading, fetchStaticMetadata }) => {
     const trades = useAllTrades()
+    const { clearTokens } = useTokenStore();
     const { clearTrades } = useTradeStore()
     const isOnline = useOnline();
     const viewportWidth = useWidth();
@@ -265,6 +267,7 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                         setCooldownRemaining(Math.ceil(COOLDOWN_TIME / 1000 / 60));
                         setIsCooldownActive(true);
                         clearTrades();
+                        clearTokens();
                         await fetchStaticMetadata("Manual Refresh");
                     }}
                 >
