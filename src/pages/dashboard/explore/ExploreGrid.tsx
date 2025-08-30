@@ -10,6 +10,7 @@ import { ScrollToTopButton } from '../../../components/button/scrollToTop/Scroll
 import { COOLDOWN_TIME, LAST_REFRESH_KEY } from '../../../constants';
 import { useAllTrades } from '../../../hooks/useTokenActivity';
 import { calculatePriceChange } from '../../../utils/twentyFourHourChange';
+import { useTokenStore } from '../../../store/allTokensStore';
 interface ExploreGridProps {
     tokens: any,
     fetchNextPage: any,
@@ -20,6 +21,7 @@ interface ExploreGridProps {
 }
 export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage, hasNextPage, loading, fetchStaticMetadata }) => {
     const trades = useAllTrades()
+    const { clearTokens } = useTokenStore();
     const isOnline = useOnline();
     const viewportWidth = useWidth();
     const [trending, setTrending] = useState<any[]>([]);
@@ -261,6 +263,7 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
                         localStorage.setItem(LAST_REFRESH_KEY, now.toString());
                         setCooldownRemaining(Math.ceil(COOLDOWN_TIME / 1000 / 60));
                         setIsCooldownActive(true);
+                        clearTokens();
                         await fetchStaticMetadata("Manual Refresh");
                     }}
                 >
