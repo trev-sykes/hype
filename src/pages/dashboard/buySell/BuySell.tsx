@@ -51,7 +51,6 @@ export const BuySell: React.FC<Props> = ({ balance, fetchStaticMetadata }) => {
         functionName: 'isOperator',
         args: [address, ETHBackedTokenMinterAddress],
     });
-    console.log("Is operator set: ", isOperatorSet)
     const {
         data: hash,
         writeContract,

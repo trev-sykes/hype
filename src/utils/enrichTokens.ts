@@ -64,13 +64,12 @@ export const enrichTokens = async (
                     const finalPrice = calculatedPrice ?? fetchedPriceEth;
                     const base = Number(BASE_PRICE);
                     const percentChange = base > 0 ? ((current - base) / base) * 100 : null;
-                    console.log("[enrichTokens] token final object", tokenIdStr, {
-                        totalSupply: onChain.totalSupply?.toString(),
-                        calculatedPrice,
-                        finalPrice,
-                        percentChange
-                    });
-
+                    // console.log("[enrichTokens] token final object", tokenIdStr, {
+                    //     totalSupply: onChain.totalSupply?.toString(),
+                    //     calculatedPrice,
+                    //     finalPrice,
+                    //     percentChange
+                    // });
                     return {
                         tokenId: token.tokenId,
                         name: token.name,

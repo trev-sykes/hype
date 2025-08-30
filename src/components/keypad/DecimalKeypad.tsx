@@ -54,8 +54,6 @@ export const MobileKeypad: React.FC<Props> = ({ value, onChange, allowDecimals =
 
         onChange(newValue);
     };
-    console.log("Mode: ", mode)
-    console.log("Operator Status: ", operatorStatus)
     return (
         <div className={styles.persistentKeypad}>
             <div className={styles.keypad}>

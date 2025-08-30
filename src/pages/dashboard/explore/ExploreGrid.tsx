@@ -46,7 +46,6 @@ export const ExploreGrid: React.FC<ExploreGridProps> = ({ tokens, fetchNextPage,
             .sort((a: any, b: any) => b.change7d - a.change7d) // top gainers first
             .slice(0, 5); // pick top 5 trending coins
 
-        console.log("🔥 Top 7-day trending coins:", trendingCoins);
         setTrending(trendingCoins);
     }, [tokens, trades]);
 
