@@ -62,7 +62,7 @@ export function useTradeUpdater() {
 
     useEffect(() => {
         const interval = setInterval(async () => {
-            const since = getLatestTimestamp('all');
+            const since = Number(getLatestTimestamp('all'));
             const now = Math.floor(Date.now() / 1000); // current UNIX timestamp in seconds
 
             // console.log(`[TradeUpdater] Checking for new trades since timestamp: ${since}, current time: ${now}`);
@@ -88,7 +88,7 @@ export function useTradeUpdater() {
             } catch (e) {
                 console.error('[TradeUpdater] Error fetching new trades', e);
             }
-        }, 60_000); // every 60 seconds
+        }, 10_000); // every 10 seconds
 
         return () => clearInterval(interval);
     }, []);

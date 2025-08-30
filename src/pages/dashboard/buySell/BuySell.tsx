@@ -14,7 +14,7 @@ import { ETHBackedTokenMinterABI, ETHBackedTokenMinterAddress } from '../../../s
 import { useBurnEstimation } from '../../../hooks/useTradeEstimation';
 import { enrichTokenPrice } from '../../../lib/pricing/enrichTokenPrice';
 type Currency = 'ETH' | 'TOKEN';
-type TradeMode = 'BUY' | 'SELL';
+export type TradeMode = 'BUY' | 'SELL';
 
 interface Props {
     balance: any;
@@ -44,12 +44,14 @@ export const BuySell: React.FC<Props> = ({ balance, fetchStaticMetadata }) => {
     const actionTypeRef = useRef<any>(null);
     // const mintEstimation = useMintEstimation(tokenId, amount);
     const burnEstimation = useBurnEstimation(tokenId, amount);
-    const { data: isOperator } = useReadContract({
+
+    const { data: isOperatorSet } = useReadContract({
         address: ERC6909Address,
         abi: ERC6909ABI,
         functionName: 'isOperator',
         args: [address, ETHBackedTokenMinterAddress],
     });
+    console.log("Is operator set: ", isOperatorSet)
     const {
         data: hash,
         writeContract,
@@ -119,7 +121,19 @@ export const BuySell: React.FC<Props> = ({ balance, fetchStaticMetadata }) => {
             await fetchStaticMetadata("burn");
         }
     };
+    const handleApprove = async () => {
+        try {
+            await writeContract({
+                address: ERC6909Address,
+                abi: ERC6909ABI,
+                functionName: 'setOperator',
+                args: [ETHBackedTokenMinterAddress, true],
+            });
 
+        } catch (err: any) {
+            console.error("Error handling approval: ", err.message);
+        }
+    }
     const handleBurn = async () => {
         if (!tokenId || !amount || parseFloat(amount) <= 0) return;
 
@@ -131,15 +145,6 @@ export const BuySell: React.FC<Props> = ({ balance, fetchStaticMetadata }) => {
         amountRef.current = burnEstimation?.burnAmount ?? 0;
 
         try {
-            if (!isOperator) {
-                await writeContract({
-                    address: ERC6909Address,
-                    abi: ERC6909ABI,
-                    functionName: 'setOperator',
-                    args: [ETHBackedTokenMinterAddress, true],
-                });
-            }
-
             await writeContract({
                 address: ETHBackedTokenMinterAddress,
                 abi: ETHBackedTokenMinterABI,
@@ -344,9 +349,9 @@ export const BuySell: React.FC<Props> = ({ balance, fetchStaticMetadata }) => {
                 </div>
 
                 <button
-                    onClick={mode == "BUY" ? handleMint : handleBurn}
+                    onClick={mode == 'SELL' && !isOperatorSet ? handleApprove : mode == 'BUY' ? handleMint : handleBurn}
                     className={styles.actionButton}>
-                    {mode}
+                    {mode == 'SELL' && !isOperatorSet ? 'Approve' : mode}
                 </button>
             </div>
 
@@ -357,6 +362,8 @@ export const BuySell: React.FC<Props> = ({ balance, fetchStaticMetadata }) => {
                     allowDecimals={currency === 'ETH'}
                     maxValue={maxValue}
                     restrict={restrict}
+                    mode={mode}
+                    operatorStatus={isOperatorSet}
                 />
             </div>
         </>
