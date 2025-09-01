@@ -383,7 +383,7 @@ export default function LineChart({
             chartRef.current?.timeScale().fitContent();
             setIsLoading(false);
         },
-        [coin.price, width, height, trades, selectedInterval]
+        [coin.price, width, height]
     );
 
     // Chart initialization effect - only run when DOM is ready
@@ -508,7 +508,7 @@ export default function LineChart({
                 console.error('Failed to load lightweight-charts:', err);
                 setIsLoading(false);
             });
-    }, [isMounted, hexColor, width, height, trades, selectedInterval, coin?.tokenId, coin.price, setTrades]);
+    }, [isMounted, hexColor, width, height, coin?.tokenId, setTrades]);
 
     // Update series colors when hexColor changes
     useEffect(() => {
@@ -560,16 +560,16 @@ export default function LineChart({
         if (!isChartInitialized) return;
 
         const isSelectedAvailable = availableIntervals.some((i) => i.value === selectedInterval);
-
+        console.log("IS selected availalbe?", isSelectedAvailable);
         if (!isSelectedAvailable) {
             const fallback = availableIntervals.find((i) => i.value === -1) || availableIntervals.slice(-1)[0];
             setSelectedInterval(fallback.value);
             return;
         }
-
+        console.log("SELECTED INTERVAL: ", selectedInterval)
+        // ✅ always pass the current state value
         updateChartData(trades, selectedInterval);
-    }, [trades, coin.price, updateChartData, isChartInitialized, availableIntervals, selectedInterval]);
-
+    }, [trades, coin.price, isChartInitialized, availableIntervals, selectedInterval, updateChartData]);
     const intervalOptions = getAvailableIntervals();
 
     return (
@@ -622,7 +622,11 @@ export default function LineChart({
                             <button
                                 key={option.value}
                                 className={`${styles.intervalButton} ${selectedInterval === option.value ? styles.active : ''}`}
-                                onClick={() => setSelectedInterval(option.value)}
+                                onClick={() => {
+                                    setSelectedInterval(option.value);
+                                    updateChartData(trades, option.value);
+                                }}
+
                                 style={{ color: coin.dominantColor, }}
                             >
                                 {option.label}
