@@ -14,6 +14,7 @@ import { formatEther } from 'viem';
 import { EtherSymbol } from 'ethers';
 import { useAccount } from 'wagmi';
 import { ConnectWallet } from '../../../components/wallet/ConnectWallet';
+import { useNavStore } from '../../../store/navStore';
 const valueOfTokens = (totalSupply: any, balance: any) => {
     const basePrice = 0.000001;
     const slope = 0.0000005;
@@ -30,6 +31,7 @@ export const CoinInfo: React.FC = () => {
     const [imageLoaded, setImageLoaded] = useState<boolean | null>(null);
     const [activeTab, setActiveTab] = useState<'balance' | 'insights'>('balance');
     const [showCTA, setShowCTA] = useState(true);
+    const { isNavExpanded } = useNavStore();
     const [isImageToggled, setIsImageToggled] = useState<boolean>(false);
     const [ethPriceUSD, setEthPriceUSD] = useState<any>(null);
     const { getTokenById } = useTokenStore();
@@ -252,7 +254,7 @@ export const CoinInfo: React.FC = () => {
                     {!isConnected ? (
                         <>
                             <button
-                                className={`${styles.tradeButton} ${!showCTA ? styles.ctaHidden : ''}`}
+                                className={`${styles.tradeButton} ${!showCTA || isNavExpanded ? styles.ctaHidden : ''}`}
                                 style={{ cursor: 'default' }}
                                 onClick={() => setIsConnectorOpen(prev => !prev)}
                             >
@@ -262,13 +264,13 @@ export const CoinInfo: React.FC = () => {
                         <>
                             <Link
                                 to={`/trade/${coin.tokenId}`}
-                                className={`${styles.tradeButton} ${!showCTA ? styles.ctaHidden : ''}`}
+                                className={`${styles.tradeButton} ${!showCTA || !isNavExpanded ? styles.ctaHidden : ''}`}
                             >
                                 Buy & Sell
                             </Link>
                             <Link
                                 to={`/explore/${coin.tokenId}/trade`}
-                                className={`${styles.tradeButton} ${!showCTA ? styles.ctaHidden : ''}`}
+                                className={`${styles.tradeButton} ${!showCTA || !isNavExpanded ? styles.ctaHidden : ''}`}
                             >
                                 Trade
                             </Link>

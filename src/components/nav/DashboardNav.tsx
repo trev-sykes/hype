@@ -3,9 +3,11 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { ChevronUp, ChevronDown, Home, User, Compass, Plus, Info } from 'lucide-react';
 import { Profile } from '../profile/Profile';
 import styles from './DashboardNav.module.css';
+import { useNavStore } from '../../store/navStore';
 
 const DashboardNav = ({ openConnector }: any) => {
     const [isCollapsed, setIsCollapsed] = useState(true);
+    const { setNavExpanded, isNavExpanded } = useNavStore();
     const [isMobile, setIsMobile] = useState(false);
     const location = useLocation();
 
@@ -37,7 +39,12 @@ const DashboardNav = ({ openConnector }: any) => {
         >
             <button
                 className={styles.toggleButton}
-                onClick={() => setIsCollapsed(!isCollapsed)}
+                onClick={() => {
+                    setIsCollapsed(!isCollapsed)
+                    console.log("IS nav expanded; ", isNavExpanded);
+                    setNavExpanded(prev => !prev);
+
+                }}
                 aria-label={isCollapsed ? 'Expand navigation' : 'Collapse navigation'}
             >
                 {isCollapsed ? <ChevronUp size={isMobile ? 18 : 20} /> : <ChevronDown size={isMobile ? 18 : 20} />}
