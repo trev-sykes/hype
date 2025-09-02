@@ -31,7 +31,7 @@ export const CoinInfo: React.FC = () => {
     const [imageLoaded, setImageLoaded] = useState<boolean | null>(null);
     const [activeTab, setActiveTab] = useState<'balance' | 'insights'>('balance');
     const [showCTA, setShowCTA] = useState(true);
-    const { isNavExpanded } = useNavStore();
+    const { setNavExpanded, isNavExpanded } = useNavStore();
     const [isImageToggled, setIsImageToggled] = useState<boolean>(false);
     const [ethPriceUSD, setEthPriceUSD] = useState<any>(null);
     const { getTokenById } = useTokenStore();
@@ -57,6 +57,7 @@ export const CoinInfo: React.FC = () => {
         if (tokenId) {
             const token: any = getTokenById(tokenId);
             setCoin(token);
+            setNavExpanded(false);
         }
     }, [tokenId]);
 
@@ -264,13 +265,13 @@ export const CoinInfo: React.FC = () => {
                         <>
                             <Link
                                 to={`/trade/${coin.tokenId}`}
-                                className={`${styles.tradeButton} ${!showCTA || !isNavExpanded ? styles.ctaHidden : ''}`}
+                                className={`${styles.tradeButton} ${!showCTA || isNavExpanded ? styles.ctaHidden : ''}`}
                             >
                                 Buy & Sell
                             </Link>
                             <Link
                                 to={`/explore/${coin.tokenId}/trade`}
-                                className={`${styles.tradeButton} ${!showCTA || !isNavExpanded ? styles.ctaHidden : ''}`}
+                                className={`${styles.tradeButton} ${!showCTA || isNavExpanded ? styles.ctaHidden : ''}`}
                             >
                                 Trade
                             </Link>
